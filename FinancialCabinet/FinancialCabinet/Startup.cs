@@ -36,8 +36,10 @@ namespace FinancialCabinet
         {
             using (IServiceScope serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
+                Console.Write("Start migration... ");
                 ApiDbContext context = serviceScope.ServiceProvider.GetService<ApiDbContext>();
                 context.Database.Migrate();
+                Console.WriteLine("complete");
             }
             if (env.IsDevelopment())
             {
