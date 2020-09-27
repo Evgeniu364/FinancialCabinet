@@ -6,7 +6,7 @@ namespace FinancialCabinet.Model
 {
     public class UserModel : IUser
     {
-        public Guid ID { get; set; }
+        
         public DateTime DateRegistration { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }

@@ -22,7 +22,6 @@ namespace FinancialCabinet.Database
         protected override void OnModelCreating(ModelBuilder builder)
         {
             EntityTypeBuilder<User> User = builder.Entity<User>();
-            User.HasKey(e => e.ID);
             User.HasMany(e => e.LikeDepositList).WithOne(e => e.User);
 
             EntityTypeBuilder<Deposit> Deposit = builder.Entity<Deposit>();
