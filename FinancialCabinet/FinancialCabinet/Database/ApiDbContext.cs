@@ -5,10 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace FinancialCabinet.Database
 {
-    public class ApiDbContext : DbContext
+    public class ApiDbContext : IdentityDbContext<User>
     {
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Deposit> Deposits { get; set; }
@@ -27,6 +28,7 @@ namespace FinancialCabinet.Database
             EntityTypeBuilder<Deposit> Deposit = builder.Entity<Deposit>();
             Deposit.HasKey(e => e.ID);
             Deposit.HasMany(e => e.LikeDepositList).WithOne(e => e.Deposit);
+            base.OnModelCreating(builder);
         }
     }
 }

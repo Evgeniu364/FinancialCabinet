@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FinancialCabinet.Database;
+using FinancialCabinet.Entity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +31,7 @@ namespace FinancialCabinet
         {
             services.AddControllers();
             services.AddDbContext<ApiDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApiDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +53,8 @@ namespace FinancialCabinet
 
             app.UseRouting();
 
+            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
