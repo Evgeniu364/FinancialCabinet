@@ -19,11 +19,13 @@ namespace FinancialCabinet.Controllers
             _signInManager = signInManager;
         }
         [HttpGet]
+        [Route("register")]
         public IActionResult Register()
         {
             return Content("Get Register");
         }
         [HttpPost]
+        [Route("register")]
         public async Task<IActionResult> Register(UserModel model)
         {
             if(ModelState.IsValid)
@@ -45,6 +47,35 @@ namespace FinancialCabinet.Controllers
                 }
             }
             return Content("Post Register GG");
+        }
+        
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login(LoginModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = 
+                    await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                if (result.Succeeded)
+                {
+                   
+                        return Content("Successful auth");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                }
+            }
+            return Content("Successful auth");
+        }
+ 
+        [HttpPost]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Content("Successful out");
         }
     }
 }
