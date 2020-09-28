@@ -18,5 +18,7 @@ namespace FinancialCabinet.Entity
         public bool IsIncomeCertification { get; set; }
         public Guid BankId { get; set; }
         public Bank Bank { get; set; }
+        public Guid GroupCreditId { get; set; }
+        public GroupCredit GroupCredit { get; set; }
     }
 }

@@ -30,7 +30,8 @@ namespace FinancialCabinet.Database
             Deposit.HasKey(e => e.ID);
             Deposit.HasMany(e => e.LikeDepositList).WithOne(e => e.Deposit);
 
-            EntityTypeBuilder<Credit> Credit = builder.Entity
+            EntityTypeBuilder<Credit> Credit = builder.Entity<Credit>();
+            Credit.HasKey(e => e.ID);
         }
     }
 }
