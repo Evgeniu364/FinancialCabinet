@@ -5,10 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace FinancialCabinet.Database
 {
-    public class ApiDbContext : DbContext
+    public class ApiDbContext : IdentityDbContext<User>
     {
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Deposit> Deposits { get; set; }
@@ -23,7 +24,6 @@ namespace FinancialCabinet.Database
         protected override void OnModelCreating(ModelBuilder builder)
         {
             EntityTypeBuilder<User> User = builder.Entity<User>();
-            User.HasKey(e => e.ID);
             User.HasMany(e => e.LikeDepositList).WithOne(e => e.User);
 
             EntityTypeBuilder<Deposit> Deposit = builder.Entity<Deposit>();
@@ -32,6 +32,7 @@ namespace FinancialCabinet.Database
 
             EntityTypeBuilder<Credit> Credit = builder.Entity<Credit>();
             Credit.HasKey(e => e.ID);
+            base.OnModelCreating(builder);
         }
     }
 }
