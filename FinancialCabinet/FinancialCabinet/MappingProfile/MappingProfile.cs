@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FinancialCabinet.Entity;
 using FinancialCabinet.Model;
+using Microsoft.EntityFrameworkCore.Sqlite.Storage.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,10 @@ namespace FinancialCabinet.MappingProfile
                 DepositID = src.ID
             })));
 
+            CreateMap<Credit, CreditModel>().ForMember(dest => dest.Bank, opt => opt.MapFrom(src => src.Bank));
+            CreateMap<CreditModel, Credit>().ForMember(dest => dest.Bank, opt => opt.MapFrom(src => src.Bank));
+
+            CreateMap<Bank, BankModel>();
         }
     }
 }

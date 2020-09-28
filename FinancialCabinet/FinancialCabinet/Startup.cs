@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FinancialCabinet.Database;
+using FinancialCabinet.MappingProfile;
 using FinancialCabinet.Entity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
 
 namespace FinancialCabinet
 {
@@ -31,6 +33,13 @@ namespace FinancialCabinet
         {
             services.AddControllers();
             services.AddDbContext<ApiDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile.MappingProfile());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApiDbContext>();
         }
 

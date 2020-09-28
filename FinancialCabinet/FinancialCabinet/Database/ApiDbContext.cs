@@ -14,6 +14,8 @@ namespace FinancialCabinet.Database
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Deposit> Deposits { get; set; }
 
+        public virtual DbSet<Credit> Credits { get; set; }
+
         public ApiDbContext(DbContextOptions options) : base(options)
         {
             //Database.EnsureCreated();
@@ -27,6 +29,9 @@ namespace FinancialCabinet.Database
             EntityTypeBuilder<Deposit> Deposit = builder.Entity<Deposit>();
             Deposit.HasKey(e => e.ID);
             Deposit.HasMany(e => e.LikeDepositList).WithOne(e => e.Deposit);
+
+            EntityTypeBuilder<Credit> Credit = builder.Entity<Credit>();
+            Credit.HasKey(e => e.ID);
             base.OnModelCreating(builder);
         }
     }
