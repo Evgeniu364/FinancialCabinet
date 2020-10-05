@@ -12,5 +12,11 @@ namespace FinancialCabinet.Entity
         public string Phone { get; set; }
         public string Address { get; set; }
         public List<LikeDeposit> LikeDepositList { get; set; } 
+        public Individual Individual { get; set; }
+        public LegalEntity LegalEntity { get; set; }
+        
+        public int IndividualForeignKey { get; set; }
+        public Guid LegalEntityForeignKey { get; set; }
+        
     }
 }
