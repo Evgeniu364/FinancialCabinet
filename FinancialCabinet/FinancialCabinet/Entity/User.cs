@@ -15,8 +15,8 @@ namespace FinancialCabinet.Entity
         public Individual Individual { get; set; }
         public LegalEntity LegalEntity { get; set; }
         
-        public int IndividualForeignKey { get; set; }
-        public Guid LegalEntityForeignKey { get; set; }
+        public Guid IndividualID { get; set; }
+        public Guid LegalEntityID { get; set; }
         
     }
 }

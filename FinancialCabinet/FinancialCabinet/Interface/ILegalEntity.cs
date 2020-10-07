@@ -11,5 +11,6 @@ namespace FinancialCabinet.Interface
         public int NumberDocument { get; set; }
         public double CashTurnover { get; set; }
         public User User { get; set; }
+        public Guid UserID { get; set; }
     }
 }

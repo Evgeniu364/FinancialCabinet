@@ -29,12 +29,11 @@ namespace FinancialCabinet.Database
             
             EntityTypeBuilder<Individual> Individual = builder.Entity<Individual>();
             Individual.HasKey(e => e.Id);
-            Individual.HasOne(e => e.User).WithOne(e => e.Individual).HasForeignKey<User>(e => e.LegalEntityForeignKey);
+            Individual.HasOne(e => e.User).WithOne(e => e.Individual);
 
-            EntityTypeBuilder<LegalEntity> LegalEntity = builder.Entity<Entity.LegalEntity>();
+            EntityTypeBuilder<LegalEntity> LegalEntity = builder.Entity<LegalEntity>();
             LegalEntity.HasKey(e => e.Id);
-            LegalEntity.HasOne(e => e.User).WithOne(e => e.LegalEntity)
-                .HasForeignKey<User>(e => e.LegalEntityForeignKey);
+            LegalEntity.HasOne(e => e.User).WithOne(e => e.LegalEntity);
             
             EntityTypeBuilder<Deposit> Deposit = builder.Entity<Deposit>();
             Deposit.HasKey(e => e.ID);

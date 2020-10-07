@@ -14,5 +14,6 @@ namespace FinancialCabinet.Entity
         public string NumberDocument { get; set; }
         public double Salary { get; set; }
         public User User { get; set; }
+        public Guid UserID { get; set; }
     }
 }

@@ -18,5 +18,6 @@ namespace FinancialCabinet.Model
         [DataType(DataType.Password)]
         public string PasswordConfirm { get; set; }
         
+        
     }
 }
