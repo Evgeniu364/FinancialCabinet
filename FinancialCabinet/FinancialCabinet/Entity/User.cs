@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FinancialCabinet.Entity
 {
-    public class User: IdentityUser, IUser
+    public class User: IdentityUser<Guid>, IUser
     {
         
         public DateTime DateRegistration { get; set; }
@@ -15,8 +15,8 @@ namespace FinancialCabinet.Entity
         public Individual Individual { get; set; }
         public LegalEntity LegalEntity { get; set; }
         
-        public Guid IndividualID { get; set; }
-        public Guid LegalEntityID { get; set; }
+        public Guid? IndividualID { get; set; }
+        public Guid? LegalEntityID { get; set; }
         
     }
 }
