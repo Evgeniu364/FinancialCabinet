@@ -11,6 +11,7 @@ namespace FinancialCabinet.Interface
         public DateTime DateRegistration { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
+    
         
     }
 }

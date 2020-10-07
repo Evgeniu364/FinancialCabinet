@@ -25,7 +25,16 @@ namespace FinancialCabinet.Database
         {
             EntityTypeBuilder<User> User = builder.Entity<User>();
             User.HasMany(e => e.LikeDepositList).WithOne(e => e.User);
+             
+            
+            EntityTypeBuilder<Individual> Individual = builder.Entity<Individual>();
+            Individual.HasKey(e => e.Id);
+            Individual.HasOne(e => e.User).WithOne(e => e.Individual);
 
+            EntityTypeBuilder<LegalEntity> LegalEntity = builder.Entity<LegalEntity>();
+            LegalEntity.HasKey(e => e.Id);
+            LegalEntity.HasOne(e => e.User).WithOne(e => e.LegalEntity);
+            
             EntityTypeBuilder<Deposit> Deposit = builder.Entity<Deposit>();
             Deposit.HasKey(e => e.ID);
             Deposit.HasMany(e => e.LikeDepositList).WithOne(e => e.Deposit);

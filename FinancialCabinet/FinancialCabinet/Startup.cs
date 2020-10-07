@@ -32,7 +32,7 @@ namespace FinancialCabinet
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<ApiDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
+            services.AddDbContext<ApiDbContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile.MappingProfile());
