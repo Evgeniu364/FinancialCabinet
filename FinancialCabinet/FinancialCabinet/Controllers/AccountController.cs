@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using FinancialCabinet.Entity;
 using FinancialCabinet.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,12 +19,14 @@ namespace FinancialCabinet.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+
         [HttpGet]
         [Route("register")]
         public IActionResult Register()
         {
             return Content("Get Register");
         }
+
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register(UserModel model)

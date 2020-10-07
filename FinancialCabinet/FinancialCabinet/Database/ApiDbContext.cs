@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace FinancialCabinet.Database
 {
-    public class ApiDbContext : IdentityDbContext<User>
+    public class ApiDbContext : IdentityDbContext<User, Role, Guid>
     {
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Deposit> Deposits { get; set; }
@@ -25,7 +25,8 @@ namespace FinancialCabinet.Database
         {
             EntityTypeBuilder<User> User = builder.Entity<User>();
             User.HasMany(e => e.LikeDepositList).WithOne(e => e.User);
-             
+            User.HasOne(e => e.Individual).WithOne(e => e.User).HasForeignKey<Individual>(e => e.UserID);
+            User.HasOne(e => e.LegalEntity).WithOne(e => e.User).HasForeignKey<LegalEntity>(e => e.UserID);
             
             EntityTypeBuilder<Individual> Individual = builder.Entity<Individual>();
             Individual.HasKey(e => e.Id);

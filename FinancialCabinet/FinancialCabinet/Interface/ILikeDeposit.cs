@@ -8,7 +8,7 @@ namespace FinancialCabinet.Interface
 {
     public interface ILikeDeposit
     {
-        public Guid IdUser { get; set; }
+        public Guid UserID { get; set; }
         public Guid DepositID { get; set; }
     }
 }
