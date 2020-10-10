@@ -5,10 +5,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FinancialCabinet.Model
 {
-    public class UserModel : IUser
+    public class UserModel
     {
         
-        public DateTime DateRegistration { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
         public List<DepositModel> DepositList { get; set; }
