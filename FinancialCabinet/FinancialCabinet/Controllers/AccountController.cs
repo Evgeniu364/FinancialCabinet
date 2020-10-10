@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using FinancialCabinet.Entity;
 using FinancialCabinet.Model;
@@ -33,7 +34,11 @@ namespace FinancialCabinet.Controllers
         {
             if(ModelState.IsValid)
             {
-                User user = new User { Email = model.Email, UserName = model.Email}; // потом передлеать, когда будет мапинг
+                User user = new User
+                {
+                    Email = model.Email, UserName = model.Email, DateRegistration = DateTime.Now,
+                    Phone = model.Phone, Address = model.Address
+                }; // потом передлеать, когда будет мапинг
                 
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
