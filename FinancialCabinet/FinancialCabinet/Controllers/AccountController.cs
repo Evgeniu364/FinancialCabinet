@@ -2,7 +2,9 @@ using System;
 using System.Threading.Tasks;
 using FinancialCabinet.Database;
 using FinancialCabinet.Entity;
+using FinancialCabinet.Interface;
 using FinancialCabinet.Model;
+using FinancialCabinet.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +19,15 @@ namespace FinancialCabinet.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private ApiDbContext _db;
+        private readonly IIndividualManagementService _individualManagementService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ApiDbContext context)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ApiDbContext context,
+            IIndividualManagementService individualManagementService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _db = context;
+            _individualManagementService = individualManagementService;
         }
 
         [HttpGet]
@@ -98,16 +103,7 @@ namespace FinancialCabinet.Controllers
             User user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (user != null)
             {
-                Individual individual = new Individual
-                {
-                    Name = model.Name, LastName = model.LastName,
-                    Patronymic = model.Patronymic, Salary = model.Salary, UserID = user.Id, User = user,
-                    NumberDocument = model.NumberDocument, TypeDocument = model.TypeDocument,
-                    DateOfBirth = model.DateOfBirth
-                };
-                _db.Individuals.Add(individual);
-                await _db.SaveChangesAsync();
-                Individual ind = await _db.Individuals.FirstOrDefaultAsync(p => p.UserID == user.Id);
+                Individual ind = _individualManagementService.CreateIndividual(model, user).Result;
                 user.IndividualID = ind.Id;
                 user.Individual = ind;
                 var result = await _userManager.UpdateAsync(user);
