@@ -12,6 +12,7 @@ namespace FinancialCabinet.Database
     public class ApiDbContext : IdentityDbContext<User, Role, Guid>
     {
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Individual> Individuals { get; set; }
         public virtual DbSet<Deposit> Deposits { get; set; }
 
         public virtual DbSet<Credit> Credits { get; set; }
