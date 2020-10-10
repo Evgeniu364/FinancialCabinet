@@ -8,7 +8,7 @@ namespace FinancialCabinet.Interface
     public interface IIndividualManagementService
     {
         public Task<Individual> CreateIndividual(IndividualModel model, User user);
-        public bool EditIndividual(Guid id, IndividualModel model);
+        public Task<bool> EditIndividual(Guid id, EditIndividualModel model);
         public bool Get(Guid id, out IndividualModel model);
 
     }

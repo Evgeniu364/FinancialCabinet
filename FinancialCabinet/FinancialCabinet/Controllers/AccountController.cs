@@ -122,5 +122,21 @@ namespace FinancialCabinet.Controllers
 
             return Content("GG");
         }
+        
+        [HttpPost]
+        [Route("Edit/EditIndividual")]
+        public async Task<IActionResult> EditIndividual(EditIndividualModel model)
+        {
+            User user = await _userManager.FindByNameAsync(User.Identity.Name);
+            Individual individual = await _db.Individuals.FirstOrDefaultAsync(p => p.Id == user.IndividualID);
+            if (_individualManagementService.EditIndividual(individual.Id, model).Result)
+            {
+                return Content("Successfully");
+            }
+            else
+            {
+                return Content("GG");
+            }
+        }
     }
 }

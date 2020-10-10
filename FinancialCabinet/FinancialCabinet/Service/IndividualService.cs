@@ -32,9 +32,36 @@ namespace FinancialCabinet.Service
             return ind;
         }
 
-        public bool EditIndividual(Guid id, IndividualModel model)
+        public async Task<bool> EditIndividual(Guid id, EditIndividualModel model)
         {
-            throw new NotImplementedException();
+            Individual individual = await _db.Individuals.FirstOrDefaultAsync(p => p.Id == id);
+            if (individual != null)
+            {
+                if (model.LastName != null)
+                {
+                    individual.LastName = model.LastName;
+                }
+
+                if (model.TypeDocument != null)
+                {
+                    individual.TypeDocument = model.TypeDocument;
+                }
+
+                if (model.NumberDocument != null)
+                {
+                    individual.NumberDocument = model.NumberDocument;
+                }
+                if (model.Salary != null)
+                {
+                    individual.Salary = (double)model.Salary;
+                }
+
+                _db.Individuals.Update(individual);
+                await _db.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
         }
 
         public bool Get(Guid id, out IndividualModel model)
