@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FinancialCabinet.Database;
 using FinancialCabinet.Entity;
@@ -64,9 +65,18 @@ namespace FinancialCabinet.Service
             return false;
         }
 
-        public bool Get(Guid id, out IndividualModel model)
+        public bool Get(Guid id, out Individual individual)
         {
-            throw new NotImplementedException();
+            individual = _db.Individuals.FirstOrDefault(p => p.Id == id);
+            if (individual != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
     }
 }

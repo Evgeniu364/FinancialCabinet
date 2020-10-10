@@ -9,7 +9,7 @@ namespace FinancialCabinet.Interface
     {
         public Task<Individual> CreateIndividual(IndividualModel model, User user);
         public Task<bool> EditIndividual(Guid id, EditIndividualModel model);
-        public bool Get(Guid id, out IndividualModel model);
+        public bool Get(Guid id, out Individual individual);
 
     }
 }

@@ -128,15 +128,19 @@ namespace FinancialCabinet.Controllers
         public async Task<IActionResult> EditIndividual(EditIndividualModel model)
         {
             User user = await _userManager.FindByNameAsync(User.Identity.Name);
-            Individual individual = await _db.Individuals.FirstOrDefaultAsync(p => p.Id == user.IndividualID);
-            if (_individualManagementService.EditIndividual(individual.Id, model).Result)
+            if (user.IndividualID != null &&
+                _individualManagementService.Get((Guid) user.IndividualID, out var individual))
             {
-                return Content("Successfully");
+                if (_individualManagementService.EditIndividual(individual.Id, model).Result)
+                {
+                    return Content("Successfully");
+                }
+                else
+                {
+                    return Content("GG");
+                }
             }
-            else
-            {
-                return Content("GG");
-            }
+            return Content("GG");
         }
     }
 }
