@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace FinancialCabinet.Interface
 {
-    public interface ILikeDeposit
+    public interface IPercent
     {
-        public Guid UserID { get; set; }
+        public Guid ID { get; set; }
+        public double? MinPercent { get; set; }
+        public double MaxPercent { get; set; }
+        public bool IsInterval { get; set; }
         public Guid SingleDepositID { get; set; }
     }
 }

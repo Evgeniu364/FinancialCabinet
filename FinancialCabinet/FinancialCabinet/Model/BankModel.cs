@@ -1,4 +1,5 @@
-﻿using FinancialCabinet.Interface;
+﻿using FinancialCabinet.Entity;
+using FinancialCabinet.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,10 @@ namespace FinancialCabinet.Model
         public string Name { get; set; }
         public string Address { get; set; }
         public string Email { get; set; }
-        public string Phone { get; set; }
+        public List<string> Phones { get; set; }
         public string BankAccount { get; set; }
         public string BIK { get; set; }
         public string Information { get; set; }
+        public List<Deposit> DepositList { get; set; }
     }
 }
