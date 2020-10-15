@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace FinancialCabinet.Entity
 {
-    public class LikeDeposit: ILikeDeposit
+    public class Phone: IPhone
     {
         public Guid ID { get; set; }
-        public Guid UserID { get; set; }
-        public Guid SingleDepositID { get; set; }
-        public User User { get; set; }
-        public SingleDeposit SingleDeposit { get; set; }
+        public string PhoneNumber { get; set; }
+        public Guid BankID { get; set; }
+        public Bank Bank { get; set; }
     }
 }
