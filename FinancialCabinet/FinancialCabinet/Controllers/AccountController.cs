@@ -30,7 +30,7 @@ namespace FinancialCabinet.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register(UserModel model)
+        public async Task<IActionResult> Register(AccountModel model)
         {
             if(ModelState.IsValid)
             {
