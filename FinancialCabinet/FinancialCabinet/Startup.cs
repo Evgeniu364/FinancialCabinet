@@ -44,6 +44,8 @@ namespace FinancialCabinet
             services.AddSingleton(mapper);
             services.AddSingleton<ParserService>();
             services.AddTransient<BankService>();
+            services.AddTransient<DepositService>();
+            services.AddTransient<CreditService>();
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApiDbContext>()
                 .AddDefaultTokenProviders();
