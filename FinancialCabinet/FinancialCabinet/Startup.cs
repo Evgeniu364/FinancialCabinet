@@ -17,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using Newtonsoft.Json;
+using FinancialCabinet.Service;
 
 namespace FinancialCabinet
 {
@@ -41,6 +42,8 @@ namespace FinancialCabinet
 
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddSingleton<ParserService>();
+            services.AddTransient<BankService>();
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApiDbContext>()
                 .AddDefaultTokenProviders();
@@ -48,7 +51,7 @@ namespace FinancialCabinet
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
             using (IServiceScope serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
@@ -57,6 +60,9 @@ namespace FinancialCabinet
                 context.Database.Migrate();
                 Console.WriteLine("complete");
             }
+
+            lifetime.ApplicationStarted.Register(OnApplicationStarted);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -81,6 +87,11 @@ namespace FinancialCabinet
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void OnApplicationStarted()
+        {
+            
         }
     }
 }

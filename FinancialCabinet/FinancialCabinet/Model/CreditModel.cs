@@ -19,6 +19,6 @@ namespace FinancialCabinet.Model
         public Guid BankId { get; set; }
         public BankModel Bank { get; set; }
         public Guid GroupCreditId { get; set; }
-        public List<UserModel> UserList { get; set; }
+        public List<AccountModel> UserList { get; set; }
     }
 }

@@ -19,14 +19,18 @@ namespace FinancialCabinet.Service
     {
         public List<Bank> ParseBanks()
         {
-            Console.Write("Start parsing banks... ");
+            Console.WriteLine("Start parsing banks... ");
             IConfiguration config = Configuration.Default.WithDefaultLoader();
             IBrowsingContext context = BrowsingContext.New(config);
             IDocument document = context.OpenAsync("https://myfin.by/banki").Result;
             IElement banksTable = document.QuerySelectorAll("table[class*='rates-table-sort']").First();
             List<Bank> bankList = new List<Bank>();
-            foreach (IElement bankRow in banksTable.QuerySelectorAll("tr[class*='tr-tb']"))
+            IHtmlCollection<IElement> banksHtml = banksTable.QuerySelectorAll("tr[class*='tr-tb']");
+            int i = 0;
+            foreach (IElement bankRow in banksHtml)
             {
+                i++;
+                Console.WriteLine($"{i}/{banksHtml.Count()}");
                 string bankName;
                 string bankAddress;
                 string bankURL;
@@ -54,7 +58,7 @@ namespace FinancialCabinet.Service
             return bankList;
         }
 
-        public static List<Deposit> ParseDeposits(IBrowsingContext context, string bankURL)
+        private List<Deposit> ParseDeposits(IBrowsingContext context, string bankURL)
         {
             string depositsURL = bankURL + "/vklady";
             IDocument depositsDocument = context.OpenAsync(depositsURL).Result;
