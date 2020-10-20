@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
+using FinancialCabinet.Interface;
 using Newtonsoft.Json;
 using FinancialCabinet.Service;
 
@@ -35,10 +36,13 @@ namespace FinancialCabinet
         {
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             services.AddDbContext<ApiDbContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
+            services.AddTransient<IIndividualManagementService, IndividualService>();
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile.MappingProfile());
             });
+            
+            
 
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
@@ -49,7 +53,9 @@ namespace FinancialCabinet
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApiDbContext>()
                 .AddDefaultTokenProviders();
+
             services.AddSwaggerGen();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

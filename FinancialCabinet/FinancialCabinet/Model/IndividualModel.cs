@@ -1,11 +1,9 @@
 using System;
-using FinancialCabinet.Interface;
 
-namespace FinancialCabinet.Entity
+namespace FinancialCabinet.Model
 {
-    public class Individual : IIndividual
+    public class IndividualModel
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
         public string Patronymic { get; set; }
@@ -13,7 +11,6 @@ namespace FinancialCabinet.Entity
         public string TypeDocument { get; set; }
         public string NumberDocument { get; set; }
         public double? Salary { get; set; }
-        public User User { get; set; }
-        public Guid UserID { get; set; }
+        
     }
 }

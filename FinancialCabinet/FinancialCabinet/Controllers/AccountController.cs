@@ -1,10 +1,14 @@
 using System;
 using System.Threading.Tasks;
+using FinancialCabinet.Database;
 using FinancialCabinet.Entity;
+using FinancialCabinet.Interface;
 using FinancialCabinet.Model;
+using FinancialCabinet.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinancialCabinet.Controllers
 {
@@ -14,11 +18,15 @@ namespace FinancialCabinet.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
- 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        private readonly IIndividualManagementService _individualManagementService;
+
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ApiDbContext context,
+            IIndividualManagementService individualManagementService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            
+            _individualManagementService = individualManagementService;
         }
 
         [HttpGet]
@@ -32,14 +40,14 @@ namespace FinancialCabinet.Controllers
         [Route("register")]
         public async Task<IActionResult> Register(AccountModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 User user = new User
                 {
                     Email = model.Email, UserName = model.Email, DateRegistration = DateTime.Now,
                     Phone = model.Phone, Address = model.Address
-                }; // потом передлеать, когда будет мапинг
-                
+                }; // потом передлеать, когда будет мапинг ????
+
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -54,30 +62,31 @@ namespace FinancialCabinet.Controllers
                     }
                 }
             }
+
             return Content("Post Register GG");
         }
-        
+
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginModel model)
         {
             if (ModelState.IsValid)
             {
-                var result = 
+                var result =
                     await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-                   
-                        return Content("Successful auth");
+                    return Content("Successful auth");
                 }
                 else
                 {
                     ModelState.AddModelError("", "Неправильный логин и (или) пароль");
                 }
             }
+
             return Content("Successful auth");
         }
- 
+
         [HttpPost]
         [Route("Logout")]
         public async Task<IActionResult> Logout()
