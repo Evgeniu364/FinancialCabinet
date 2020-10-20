@@ -33,7 +33,7 @@ namespace FinancialCabinet.Service
             return ind;
         }
 
-        public async Task<bool> EditIndividual(Guid id, EditIndividualModel model)
+        public async Task<bool> EditIndividual(Guid id, IndividualModel model)
         {
             Individual individual = await _db.Individuals.FirstOrDefaultAsync(p => p.Id == id);
             if (individual != null)

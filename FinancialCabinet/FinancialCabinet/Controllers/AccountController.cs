@@ -18,7 +18,6 @@ namespace FinancialCabinet.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private ApiDbContext _db;
         private readonly IIndividualManagementService _individualManagementService;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ApiDbContext context,
@@ -26,7 +25,7 @@ namespace FinancialCabinet.Controllers
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _db = context;
+            
             _individualManagementService = individualManagementService;
         }
 
@@ -47,7 +46,7 @@ namespace FinancialCabinet.Controllers
                 {
                     Email = model.Email, UserName = model.Email, DateRegistration = DateTime.Now,
                     Phone = model.Phone, Address = model.Address
-                }; // потом передлеать, когда будет мапинг
+                }; // потом передлеать, когда будет мапинг ????
 
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -94,53 +93,6 @@ namespace FinancialCabinet.Controllers
         {
             await _signInManager.SignOutAsync();
             return Content("Successful out");
-        }
-
-        [HttpPost]
-        [Route("Edit/AddIndividual")]
-        public async Task<IActionResult> AddIndividual(IndividualModel model)
-        {
-            User user = await _userManager.FindByNameAsync(User.Identity.Name);
-            if (user != null)
-            {
-                Individual ind = _individualManagementService.CreateIndividual(model, user).Result;
-                user.IndividualID = ind.Id;
-                user.Individual = ind;
-                var result = await _userManager.UpdateAsync(user);
-                if (result.Succeeded)
-                {
-                    return Content("Ok");
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-            }
-
-            return Content("GG");
-        }
-        
-        [HttpPost]
-        [Route("Edit/EditIndividual")]
-        public async Task<IActionResult> EditIndividual(EditIndividualModel model)
-        {
-            User user = await _userManager.FindByNameAsync(User.Identity.Name);
-            if (user.IndividualID != null &&
-                _individualManagementService.Get((Guid) user.IndividualID, out var individual))
-            {
-                if (_individualManagementService.EditIndividual(individual.Id, model).Result)
-                {
-                    return Content("Successfully");
-                }
-                else
-                {
-                    return Content("GG");
-                }
-            }
-            return Content("GG");
         }
     }
 }
