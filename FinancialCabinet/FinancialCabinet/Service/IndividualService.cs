@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using FinancialCabinet.Database;
 using FinancialCabinet.Entity;
 using FinancialCabinet.Interface;
@@ -12,51 +13,30 @@ namespace FinancialCabinet.Service
     public class IndividualService : IIndividualManagementService
     {
         private ApiDbContext _db;
+        private readonly IMapper _mapper;
 
-        public IndividualService(ApiDbContext context)
+        public IndividualService(ApiDbContext context, IMapper mapper)
         {
             _db = context;
+            _mapper = mapper;
         }
 
-        public async Task<Individual> CreateIndividual(IndividualModel model, User user)
+        public async Task<IndividualModel> CreateIndividual(IndividualModel model)
         {
-            Individual individual = new Individual
-            {
-                Name = model.Name, LastName = model.LastName,
-                Patronymic = model.Patronymic, Salary = model.Salary, UserID = user.Id, User = user,
-                NumberDocument = model.NumberDocument, TypeDocument = model.TypeDocument,
-                DateOfBirth = model.DateOfBirth
-            };
-            _db.Individuals.Add(individual);
+
+            Individual individual = _mapper.Map<Individual>(model);
+            individual = _db.Individuals.Add(individual).Entity;
             await _db.SaveChangesAsync();
-            Individual ind = await _db.Individuals.FirstOrDefaultAsync(p => p.UserID == user.Id);
-            return ind;
+            return _mapper.Map<IndividualModel>(individual);
         }
 
         public async Task<bool> EditIndividual(Guid id, IndividualModel model)
         {
-            Individual individual = await _db.Individuals.FirstOrDefaultAsync(p => p.Id == id);
-            if (individual != null)
+            if (model != null)
             {
-                if (model.LastName != null)
-                {
-                    individual.LastName = model.LastName;
-                }
+                Individual individual = _mapper.Map<Individual>(model);
 
-                if (model.TypeDocument != null)
-                {
-                    individual.TypeDocument = model.TypeDocument;
-                }
-
-                if (model.NumberDocument != null)
-                {
-                    individual.NumberDocument = model.NumberDocument;
-                }
-                if (model.Salary != null)
-                {
-                    individual.Salary = (double)model.Salary;
-                }
-
+                individual.Id = id;
                 _db.Individuals.Update(individual);
                 await _db.SaveChangesAsync();
                 return true;

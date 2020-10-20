@@ -32,9 +32,9 @@ namespace FinancialCabinet.Controllers
             User user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (user != null)
             {
-                Individual ind = _individualManagementService.CreateIndividual(model, user).Result;
+                model.UserId = user.Id;
+                IndividualModel ind = _individualManagementService.CreateIndividual(model).Result;
                 user.IndividualID = ind.Id;
-                user.Individual = ind;
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {

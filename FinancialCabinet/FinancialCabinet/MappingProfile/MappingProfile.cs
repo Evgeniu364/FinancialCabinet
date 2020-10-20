@@ -40,6 +40,9 @@ namespace FinancialCabinet.MappingProfile
 
             CreateMap<Bank, BankModel>();
             CreateMap<BankModel, Bank>();
+
+            CreateMap<Individual, IndividualModel>();
+            CreateMap<IndividualModel, Individual>();
         }
     }
 }
