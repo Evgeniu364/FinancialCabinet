@@ -17,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using FinancialCabinet.Interface;
+using Newtonsoft.Json;
 using FinancialCabinet.Service;
 
 namespace FinancialCabinet
@@ -33,7 +34,7 @@ namespace FinancialCabinet
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             services.AddDbContext<ApiDbContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
             services.AddTransient<IIndividualManagementService, IndividualService>();
             var mapperConfig = new MapperConfiguration(mc =>
@@ -45,14 +46,20 @@ namespace FinancialCabinet
 
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddSingleton<ParserService>();
+            services.AddTransient<BankService>();
+            services.AddTransient<DepositService>();
+            services.AddTransient<CreditService>();
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApiDbContext>()
                 .AddDefaultTokenProviders();
-            
+
+            services.AddSwaggerGen();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
             using (IServiceScope serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
@@ -61,10 +68,20 @@ namespace FinancialCabinet
                 context.Database.Migrate();
                 Console.WriteLine("complete");
             }
+
+            lifetime.ApplicationStarted.Register(OnApplicationStarted);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = "swagger";
+            });
 
             app.UseHttpsRedirection();
 
@@ -78,6 +95,11 @@ namespace FinancialCabinet
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void OnApplicationStarted()
+        {
+            
         }
     }
 }

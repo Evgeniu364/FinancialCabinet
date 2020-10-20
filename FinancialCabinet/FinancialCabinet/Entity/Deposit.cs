@@ -10,13 +10,8 @@ namespace FinancialCabinet.Entity
     public class Deposit: IDeposit
     {
         public Guid ID { get; set; }
-        public int MinSum { get; set; }
-        public int MaxSum { get; set; }
-        public int Period { get; set; }
-        public double Percent { get; set; }
-        public string Currency { get; set; }
-        public bool IsReplenishable { get; set; }
-        public bool IsRevocable { get; set; }
-        public List<LikeDeposit> LikeDepositList { get; set; }
+        public Guid BankID { get; set; }
+        public Bank Bank { get; set; }
+        public List<SingleDeposit> SingleDepositList { get; set; }
     }
 }

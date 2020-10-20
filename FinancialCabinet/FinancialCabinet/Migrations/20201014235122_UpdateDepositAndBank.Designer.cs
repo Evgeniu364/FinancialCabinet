@@ -3,14 +3,16 @@ using System;
 using FinancialCabinet.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FinancialCabinet.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201014235122_UpdateDepositAndBank")]
+    partial class UpdateDepositAndBank
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,7 +152,7 @@ namespace FinancialCabinet.Migrations
                     b.HasIndex("UserID")
                         .IsUnique();
 
-                    b.ToTable("Individuals");
+                    b.ToTable("Individual");
                 });
 
             modelBuilder.Entity("FinancialCabinet.Entity.LegalEntity", b =>
