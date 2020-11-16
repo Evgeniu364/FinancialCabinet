@@ -1,0 +1,33 @@
+﻿@inject FinancialCabinet.Data.ApplicationDbContext Context
+
+@model FinancialCabinet.Entity.User
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h4>@ViewData["Title"]</h4>
+<div class="row">
+    <div class="col-md-6">
+        <form id="profile-form" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName"></label>
+                <input asp-for="UserName" class="form-control" disabled />
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Context.LegalEntity.Find(Model.LegalEntityID).CompanyName"></label>
+                <input asp-for="@Context.LegalEntity.Find(Model.LegalEntityID).CompanyName" class="form-control" />
+                <span asp-validation-for="@Context.LegalEntity.Find(Model.LegalEntityID).CompanyName" class="text-danger"></span>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
