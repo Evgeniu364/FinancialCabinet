@@ -16,6 +16,7 @@ namespace FinancialCabinet.Data
         public virtual DbSet<Deposit> Deposits { get; set; }
         public virtual DbSet<Credit> Credits { get; set; }
         public virtual DbSet<Bank> Banks { get; set; }
+        public virtual DbSet<LegalEntity> LegalEntity { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
