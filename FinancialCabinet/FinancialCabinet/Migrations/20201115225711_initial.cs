@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FinancialCabinet.Migrations
 {
-    public partial class AddBaseEntities : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -60,7 +60,6 @@ namespace FinancialCabinet.Migrations
                     Name = table.Column<string>(nullable: true),
                     Address = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
-                    Phone = table.Column<string>(nullable: true),
                     BankAccount = table.Column<string>(nullable: true),
                     BIK = table.Column<string>(nullable: true),
                     Information = table.Column<string>(nullable: true)
@@ -71,32 +70,37 @@ namespace FinancialCabinet.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Deposits",
+                name: "Percent",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(nullable: false),
-                    MinSum = table.Column<int>(nullable: false),
-                    MaxSum = table.Column<int>(nullable: false),
-                    Period = table.Column<int>(nullable: false),
-                    Percent = table.Column<double>(nullable: false),
-                    Currency = table.Column<string>(nullable: true),
-                    IsReplenishable = table.Column<bool>(nullable: false),
-                    IsRevocable = table.Column<bool>(nullable: false)
+                    MinPercent = table.Column<double>(nullable: true),
+                    MaxPercent = table.Column<double>(nullable: false),
+                    IsInterval = table.Column<bool>(nullable: false),
+                    SingleDepositID = table.Column<Guid>(nullable: false),
+                    SingleCreditID = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Deposits", x => x.ID);
+                    table.PrimaryKey("PK_Percent", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GroupCredit",
+                name: "Period",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(nullable: false)
+                    ID = table.Column<Guid>(nullable: false),
+                    MinPeriod = table.Column<int>(nullable: true),
+                    MaxPeriod = table.Column<int>(nullable: false),
+                    MinPeriodType = table.Column<int>(nullable: true),
+                    MaxPeriodType = table.Column<int>(nullable: false),
+                    IsInterval = table.Column<bool>(nullable: false),
+                    SingleDepositID = table.Column<Guid>(nullable: false),
+                    SingleCreditID = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupCredit", x => x.ID);
+                    table.PrimaryKey("PK_Period", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -206,7 +210,7 @@ namespace FinancialCabinet.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Individual",
+                name: "Individuals",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -216,14 +220,14 @@ namespace FinancialCabinet.Migrations
                     DateOfBirth = table.Column<DateTime>(nullable: false),
                     TypeDocument = table.Column<string>(nullable: true),
                     NumberDocument = table.Column<string>(nullable: true),
-                    Salary = table.Column<double>(nullable: false),
+                    Salary = table.Column<double>(nullable: true),
                     UserID = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Individual", x => x.Id);
+                    table.PrimaryKey("PK_Individuals", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Individual_AspNetUsers_UserID",
+                        name: "FK_Individuals_AspNetUsers_UserID",
                         column: x => x.UserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -253,44 +257,11 @@ namespace FinancialCabinet.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LikeDeposit",
-                columns: table => new
-                {
-                    ID = table.Column<Guid>(nullable: false),
-                    UserID = table.Column<Guid>(nullable: false),
-                    DepositID = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LikeDeposit", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_LikeDeposit_Deposits_DepositID",
-                        column: x => x.DepositID,
-                        principalTable: "Deposits",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_LikeDeposit_AspNetUsers_UserID",
-                        column: x => x.UserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Credits",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(nullable: false),
-                    MinSum = table.Column<int>(nullable: false),
-                    MaxSum = table.Column<int>(nullable: false),
-                    Period = table.Column<int>(nullable: false),
-                    Percent = table.Column<double>(nullable: false),
-                    Age = table.Column<int>(nullable: false),
-                    IsGuarantor = table.Column<bool>(nullable: false),
-                    IsIncomeCertification = table.Column<bool>(nullable: false),
-                    BankId = table.Column<Guid>(nullable: false),
-                    GroupCreditId = table.Column<Guid>(nullable: false)
+                    BankId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -301,11 +272,166 @@ namespace FinancialCabinet.Migrations
                         principalTable: "Bank",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Deposits",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(nullable: false),
+                    BankID = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Deposits", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Credits_GroupCredit_GroupCreditId",
-                        column: x => x.GroupCreditId,
-                        principalTable: "GroupCredit",
+                        name: "FK_Deposits_Bank_BankID",
+                        column: x => x.BankID,
+                        principalTable: "Bank",
                         principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Phone",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(nullable: false),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    BankID = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Phone", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Phone_Bank_BankID",
+                        column: x => x.BankID,
+                        principalTable: "Bank",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SingleCredit",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(nullable: false),
+                    MinSum = table.Column<int>(nullable: false),
+                    MaxSum = table.Column<int>(nullable: false),
+                    Currency = table.Column<string>(nullable: true),
+                    PeriodID = table.Column<Guid>(nullable: false),
+                    PercentID = table.Column<Guid>(nullable: false),
+                    CreditID = table.Column<Guid>(nullable: false),
+                    IsGuarantorNeeded = table.Column<bool>(nullable: false),
+                    IsIncomeCertificationNeeded = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SingleCredit", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_SingleCredit_Credits_CreditID",
+                        column: x => x.CreditID,
+                        principalTable: "Credits",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SingleCredit_Percent_PercentID",
+                        column: x => x.PercentID,
+                        principalTable: "Percent",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SingleCredit_Period_PeriodID",
+                        column: x => x.PeriodID,
+                        principalTable: "Period",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SingleDeposit",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(nullable: false),
+                    Sum = table.Column<int>(nullable: true),
+                    Currency = table.Column<string>(nullable: true),
+                    IsReplenishable = table.Column<bool>(nullable: false),
+                    IsRevocable = table.Column<bool>(nullable: false),
+                    DepositID = table.Column<Guid>(nullable: false),
+                    PeriodID = table.Column<Guid>(nullable: false),
+                    PercentID = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SingleDeposit", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_SingleDeposit_Deposits_DepositID",
+                        column: x => x.DepositID,
+                        principalTable: "Deposits",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SingleDeposit_Percent_PercentID",
+                        column: x => x.PercentID,
+                        principalTable: "Percent",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SingleDeposit_Period_PeriodID",
+                        column: x => x.PeriodID,
+                        principalTable: "Period",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LikeCredit",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(nullable: false),
+                    UserID = table.Column<Guid>(nullable: false),
+                    CreditId = table.Column<Guid>(nullable: false),
+                    SingleCreditID = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LikeCredit", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_LikeCredit_SingleCredit_SingleCreditID",
+                        column: x => x.SingleCreditID,
+                        principalTable: "SingleCredit",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LikeCredit_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LikeDeposit",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(nullable: false),
+                    UserID = table.Column<Guid>(nullable: false),
+                    SingleDepositID = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LikeDeposit", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_LikeDeposit_SingleDeposit_SingleDepositID",
+                        column: x => x.SingleDepositID,
+                        principalTable: "SingleDeposit",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LikeDeposit_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -352,13 +478,13 @@ namespace FinancialCabinet.Migrations
                 column: "BankId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Credits_GroupCreditId",
-                table: "Credits",
-                column: "GroupCreditId");
+                name: "IX_Deposits_BankID",
+                table: "Deposits",
+                column: "BankID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Individual_UserID",
-                table: "Individual",
+                name: "IX_Individuals_UserID",
+                table: "Individuals",
                 column: "UserID",
                 unique: true);
 
@@ -369,14 +495,63 @@ namespace FinancialCabinet.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_LikeDeposit_DepositID",
+                name: "IX_LikeCredit_SingleCreditID",
+                table: "LikeCredit",
+                column: "SingleCreditID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LikeCredit_UserID",
+                table: "LikeCredit",
+                column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LikeDeposit_SingleDepositID",
                 table: "LikeDeposit",
-                column: "DepositID");
+                column: "SingleDepositID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LikeDeposit_UserID",
                 table: "LikeDeposit",
                 column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Phone_BankID",
+                table: "Phone",
+                column: "BankID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SingleCredit_CreditID",
+                table: "SingleCredit",
+                column: "CreditID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SingleCredit_PercentID",
+                table: "SingleCredit",
+                column: "PercentID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SingleCredit_PeriodID",
+                table: "SingleCredit",
+                column: "PeriodID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SingleDeposit_DepositID",
+                table: "SingleDeposit",
+                column: "DepositID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SingleDeposit_PercentID",
+                table: "SingleDeposit",
+                column: "PercentID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SingleDeposit_PeriodID",
+                table: "SingleDeposit",
+                column: "PeriodID",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -397,31 +572,46 @@ namespace FinancialCabinet.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Credits");
-
-            migrationBuilder.DropTable(
-                name: "Individual");
+                name: "Individuals");
 
             migrationBuilder.DropTable(
                 name: "LegalEntity");
 
             migrationBuilder.DropTable(
+                name: "LikeCredit");
+
+            migrationBuilder.DropTable(
                 name: "LikeDeposit");
+
+            migrationBuilder.DropTable(
+                name: "Phone");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Bank");
+                name: "SingleCredit");
 
             migrationBuilder.DropTable(
-                name: "GroupCredit");
+                name: "SingleDeposit");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Credits");
 
             migrationBuilder.DropTable(
                 name: "Deposits");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Percent");
+
+            migrationBuilder.DropTable(
+                name: "Period");
+
+            migrationBuilder.DropTable(
+                name: "Bank");
         }
     }
 }

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinancialCabinet.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20201010133359_Individuals")]
-    partial class Individuals
+    [Migration("20201115225711_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,9 +43,6 @@ namespace FinancialCabinet.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.HasKey("ID");
 
                     b.ToTable("Bank");
@@ -57,38 +54,12 @@ namespace FinancialCabinet.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("BankId")
                         .HasColumnType("char(36)");
-
-                    b.Property<Guid>("GroupCreditId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("IsGuarantor")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsIncomeCertification")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("MaxSum")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MinSum")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Percent")
-                        .HasColumnType("double");
-
-                    b.Property<int>("Period")
-                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.HasIndex("BankId");
-
-                    b.HasIndex("GroupCreditId");
 
                     b.ToTable("Credits");
                 });
@@ -99,41 +70,14 @@ namespace FinancialCabinet.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("Currency")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<bool>("IsReplenishable")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsRevocable")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("MaxSum")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MinSum")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Percent")
-                        .HasColumnType("double");
-
-                    b.Property<int>("Period")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Deposits");
-                });
-
-            modelBuilder.Entity("FinancialCabinet.Entity.GroupCredit", b =>
-                {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("BankID")
                         .HasColumnType("char(36)");
 
                     b.HasKey("ID");
 
-                    b.ToTable("GroupCredit");
+                    b.HasIndex("BankID");
+
+                    b.ToTable("Deposits");
                 });
 
             modelBuilder.Entity("FinancialCabinet.Entity.Individual", b =>
@@ -157,7 +101,7 @@ namespace FinancialCabinet.Migrations
                     b.Property<string>("Patronymic")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<double>("Salary")
+                    b.Property<double?>("Salary")
                         .HasColumnType("double");
 
                     b.Property<string>("TypeDocument")
@@ -203,13 +147,16 @@ namespace FinancialCabinet.Migrations
                     b.ToTable("LegalEntity");
                 });
 
-            modelBuilder.Entity("FinancialCabinet.Entity.LikeDeposit", b =>
+            modelBuilder.Entity("FinancialCabinet.Entity.LikeCredit", b =>
                 {
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("DepositID")
+                    b.Property<Guid>("CreditId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("SingleCreditID")
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("UserID")
@@ -217,11 +164,109 @@ namespace FinancialCabinet.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("DepositID");
+                    b.HasIndex("SingleCreditID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("LikeCredit");
+                });
+
+            modelBuilder.Entity("FinancialCabinet.Entity.LikeDeposit", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("SingleDepositID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("SingleDepositID");
 
                     b.HasIndex("UserID");
 
                     b.ToTable("LikeDeposit");
+                });
+
+            modelBuilder.Entity("FinancialCabinet.Entity.Percent", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("IsInterval")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<double>("MaxPercent")
+                        .HasColumnType("double");
+
+                    b.Property<double?>("MinPercent")
+                        .HasColumnType("double");
+
+                    b.Property<Guid>("SingleCreditID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("SingleDepositID")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Percent");
+                });
+
+            modelBuilder.Entity("FinancialCabinet.Entity.Period", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("IsInterval")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("MaxPeriod")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxPeriodType")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MinPeriod")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MinPeriodType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SingleCreditID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("SingleDepositID")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Period");
+                });
+
+            modelBuilder.Entity("FinancialCabinet.Entity.Phone", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("BankID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("BankID");
+
+                    b.ToTable("Phone");
                 });
 
             modelBuilder.Entity("FinancialCabinet.Entity.Role", b =>
@@ -249,6 +294,89 @@ namespace FinancialCabinet.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("FinancialCabinet.Entity.SingleCredit", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("CreditID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<bool>("IsGuarantorNeeded")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsIncomeCertificationNeeded")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("MaxSum")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinSum")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PercentID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("PeriodID")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CreditID");
+
+                    b.HasIndex("PercentID")
+                        .IsUnique();
+
+                    b.HasIndex("PeriodID")
+                        .IsUnique();
+
+                    b.ToTable("SingleCredit");
+                });
+
+            modelBuilder.Entity("FinancialCabinet.Entity.SingleDeposit", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<Guid>("DepositID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("IsReplenishable")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsRevocable")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid>("PercentID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("PeriodID")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int?>("Sum")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DepositID");
+
+                    b.HasIndex("PercentID")
+                        .IsUnique();
+
+                    b.HasIndex("PeriodID")
+                        .IsUnique();
+
+                    b.ToTable("SingleDeposit");
                 });
 
             modelBuilder.Entity("FinancialCabinet.Entity.User", b =>
@@ -433,14 +561,17 @@ namespace FinancialCabinet.Migrations
             modelBuilder.Entity("FinancialCabinet.Entity.Credit", b =>
                 {
                     b.HasOne("FinancialCabinet.Entity.Bank", "Bank")
-                        .WithMany()
+                        .WithMany("CreditList")
                         .HasForeignKey("BankId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
-                    b.HasOne("FinancialCabinet.Entity.GroupCredit", "GroupCredit")
-                        .WithMany()
-                        .HasForeignKey("GroupCreditId")
+            modelBuilder.Entity("FinancialCabinet.Entity.Deposit", b =>
+                {
+                    b.HasOne("FinancialCabinet.Entity.Bank", "Bank")
+                        .WithMany("DepositList")
+                        .HasForeignKey("BankID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -463,17 +594,81 @@ namespace FinancialCabinet.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FinancialCabinet.Entity.LikeCredit", b =>
+                {
+                    b.HasOne("FinancialCabinet.Entity.SingleCredit", "SingleCredit")
+                        .WithMany("LikeCreditList")
+                        .HasForeignKey("SingleCreditID");
+
+                    b.HasOne("FinancialCabinet.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FinancialCabinet.Entity.LikeDeposit", b =>
                 {
-                    b.HasOne("FinancialCabinet.Entity.Deposit", "Deposit")
+                    b.HasOne("FinancialCabinet.Entity.SingleDeposit", "SingleDeposit")
                         .WithMany("LikeDepositList")
-                        .HasForeignKey("DepositID")
+                        .HasForeignKey("SingleDepositID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FinancialCabinet.Entity.User", "User")
                         .WithMany("LikeDepositList")
                         .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FinancialCabinet.Entity.Phone", b =>
+                {
+                    b.HasOne("FinancialCabinet.Entity.Bank", "Bank")
+                        .WithMany("PhoneList")
+                        .HasForeignKey("BankID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FinancialCabinet.Entity.SingleCredit", b =>
+                {
+                    b.HasOne("FinancialCabinet.Entity.Credit", "Credit")
+                        .WithMany("SingleCreditList")
+                        .HasForeignKey("CreditID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FinancialCabinet.Entity.Percent", "Percent")
+                        .WithOne("SingleCredit")
+                        .HasForeignKey("FinancialCabinet.Entity.SingleCredit", "PercentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FinancialCabinet.Entity.Period", "Period")
+                        .WithOne("SingleCredit")
+                        .HasForeignKey("FinancialCabinet.Entity.SingleCredit", "PeriodID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FinancialCabinet.Entity.SingleDeposit", b =>
+                {
+                    b.HasOne("FinancialCabinet.Entity.Deposit", "Deposit")
+                        .WithMany("SingleDepositList")
+                        .HasForeignKey("DepositID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FinancialCabinet.Entity.Percent", "Percent")
+                        .WithOne("SingleDeposit")
+                        .HasForeignKey("FinancialCabinet.Entity.SingleDeposit", "PercentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FinancialCabinet.Entity.Period", "Period")
+                        .WithOne("SingleDeposit")
+                        .HasForeignKey("FinancialCabinet.Entity.SingleDeposit", "PeriodID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

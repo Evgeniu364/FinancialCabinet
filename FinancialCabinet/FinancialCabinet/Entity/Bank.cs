@@ -16,6 +16,7 @@ namespace FinancialCabinet.Entity
         public string BIK { get; set; }
         public string Information { get; set; }
         public List<Deposit> DepositList { get; set; }
+        public List<Credit> CreditList { get; set; }
         public List<Phone> PhoneList { get; set; }
     }
 }

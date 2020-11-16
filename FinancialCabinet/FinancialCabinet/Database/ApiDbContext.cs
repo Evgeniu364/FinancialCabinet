@@ -40,6 +40,7 @@ namespace FinancialCabinet.Database
             EntityTypeBuilder<Bank> Bank = builder.Entity<Bank>();
             Bank.ToTable("Bank");
             Bank.HasMany(e => e.DepositList).WithOne(e => e.Bank);
+            Bank.HasMany(e => e.CreditList).WithOne(e => e.Bank);
             Bank.HasMany(e => e.PhoneList).WithOne(e => e.Bank);
 
             EntityTypeBuilder<Deposit> Deposit = builder.Entity<Deposit>();
@@ -58,10 +59,12 @@ namespace FinancialCabinet.Database
             EntityTypeBuilder<Period> Period = builder.Entity<Period>();
             Period.ToTable("Period");
             Period.HasOne(e => e.SingleDeposit).WithOne(e => e.Period);
+            Period.HasOne(e => e.SingleCredit).WithOne(e => e.Period);
 
             EntityTypeBuilder<Percent> Percent = builder.Entity<Percent>();
             Percent.ToTable("Percent");
             Percent.HasOne(e => e.SingleDeposit).WithOne(e => e.Percent);
+            Percent.HasOne(e => e.SingleCredit).WithOne(e => e.Percent);
 
             EntityTypeBuilder<LikeDeposit> LikeDeposit = builder.Entity<LikeDeposit>();
             LikeDeposit.ToTable("LikeDeposit");
@@ -74,6 +77,19 @@ namespace FinancialCabinet.Database
             EntityTypeBuilder<Credit> Credit = builder.Entity<Credit>();
             Credit.ToTable("Credits");
             Credit.HasKey(e => e.ID);
+            Credit.HasOne(e => e.Bank).WithMany(e => e.CreditList);
+            Credit.HasMany(e => e.SingleCreditList).WithOne(e => e.Credit);
+
+            EntityTypeBuilder<SingleCredit> SingleCredit = builder.Entity<SingleCredit>();
+            SingleCredit.ToTable("SingleCredit");
+            SingleCredit.HasOne(e => e.Credit).WithMany(e => e.SingleCreditList);
+            SingleCredit.HasOne(e => e.Period).WithOne(e => e.SingleCredit).HasForeignKey<SingleCredit>(e => e.PeriodID);
+            SingleCredit.HasOne(e => e.Percent).WithOne(e => e.SingleCredit).HasForeignKey<SingleCredit>(e => e.PercentID);
+            SingleCredit.HasMany(e => e.LikeCreditList).WithOne(e => e.SingleCredit);
+
+            EntityTypeBuilder<LikeCredit> LikeCredit = builder.Entity<LikeCredit>();
+            LikeCredit.ToTable("LikeCredit");
+            LikeCredit.HasOne(e => e.SingleCredit).WithMany(e => e.LikeCreditList);
 
             base.OnModelCreating(builder);
         }

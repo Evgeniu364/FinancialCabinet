@@ -16,5 +16,6 @@ namespace FinancialCabinet.Interface
         public PeriodTypeEnum MaxPeriodType { get; set; }
         public bool IsInterval { get; set; }
         public Guid SingleDepositID { get; set; }
+        public Guid SingleCreditID { get; set; }
     }
 }

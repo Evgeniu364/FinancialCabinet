@@ -12,6 +12,6 @@ namespace FinancialCabinet.Entity
         public Guid UserID { get; set; }
         public Guid CreditId { get; set; }
         public User User { get; set; }
-        public Credit Credit { get; set; }
+        public SingleCredit SingleCredit { get; set; }
     }
 }

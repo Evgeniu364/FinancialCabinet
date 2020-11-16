@@ -22,6 +22,7 @@ namespace FinancialCabinet.Service
             Console.WriteLine("Start parsing banks... ");
             IConfiguration config = Configuration.Default.WithDefaultLoader();
             IBrowsingContext context = BrowsingContext.New(config);
+            ParseCredits(context, "https://myfin.by/bank/belarusbank");
             IDocument document = context.OpenAsync("https://myfin.by/banki").Result;
             IElement banksTable = document.QuerySelectorAll("table[class*='rates-table-sort']").First();
             List<Bank> bankList = new List<Bank>();
@@ -48,7 +49,8 @@ namespace FinancialCabinet.Service
                     Name = bankName,
                     PhoneList = bankPhoneNumbers,
                     Address = bankAddress,
-                    DepositList = ParseDeposits(context, bankURL)
+                    DepositList = ParseDeposits(context, bankURL),
+                    CreditList = ParseCredits(context, bankURL )
                 };
                 bankList.Add(bank);
             }
@@ -131,6 +133,152 @@ namespace FinancialCabinet.Service
             }
             depositsDocument.Dispose();
             return depositList;
+        }
+
+        private List<Credit> ParseCredits(IBrowsingContext context, string bankURL)
+        {
+            string depositsURL = bankURL + "/kredity";
+            IDocument creditsDocument = context.OpenAsync(depositsURL).Result;
+            IHtmlCollection<IElement> creditDivList;
+            try
+            {
+                creditDivList = creditsDocument.QuerySelector("div[class='credit-rates']").QuerySelectorAll("div[class='table-responsive']")[0].QuerySelector("tbody").QuerySelectorAll("tr");
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            List<Credit> creditList = new List<Credit>();
+            Credit credit = new Credit { SingleCreditList = new List<SingleCredit>() };
+            bool isFirstCredit = true;
+            foreach (IElement creditElement in creditDivList)
+            {
+                if (creditElement.InnerHtml.Contains("<td colspan=\"6\">"))
+                    continue;
+                bool isNewGroup = creditElement.QuerySelectorAll("td").Length == 6;
+                int currencyPos = isNewGroup ? 1 : 0;
+                int sumPos = isNewGroup ? 2 : 1;
+                int periodPos = isNewGroup ? 3 : 2;
+                int percentPos = isNewGroup ? 4 : 3;
+                int detailsPos = isNewGroup ? 5 : 4;
+                IHtmlCollection<IElement> creditInfoElement = creditElement.QuerySelectorAll("td");
+                string currency = creditInfoElement[currencyPos].TextContent;
+                string sumString = creditInfoElement[sumPos].TextContent.Replace(" ", "");
+                string periodString = creditInfoElement[periodPos].TextContent;
+                string percentString = creditInfoElement[percentPos].TextContent;
+                string creditDetailsURL = "";
+                bool isGuarantorNeeded = true;
+                bool isIncomeCertificationNeeded = true;
+                if (isNewGroup)
+                    creditDetailsURL = "https://myfin.by" + creditInfoElement[0].QuerySelector("a").GetAttribute("href");
+                int minSum = 0;
+                int maxSum = 0;
+                Period creditPeriod = new Period();
+                Percent creditPercent = new Percent();
+                SingleCredit singleCredit = new SingleCredit { Currency = currency };
+                if (sumString.Contains("от"))
+                    minSum = int.Parse(Regex.Matches(sumString, @"[\d]+")[0].Value);
+                if (sumString.Contains("до") && sumString.Contains("от"))
+                    maxSum = int.Parse(Regex.Matches(sumString, @"[\d]+")[1].Value);
+                else if (sumString.Contains("до"))
+                    maxSum = int.Parse(Regex.Matches(sumString, @"[\d]+")[0].Value);
+                if (periodString.Contains("до"))
+                {
+                    string[] splittedPeriod = periodString.Split("до");
+                    creditPeriod.MinPeriod = int.Parse(splittedPeriod[0].Replace("от", "").Replace("мес.", "").Replace("дн.", "").Trim());
+                    creditPeriod.MaxPeriod = int.Parse(splittedPeriod[1].Replace("до", "").Replace("мес.", "").Replace("дн.", "").Trim());
+                    creditPeriod.MaxPeriodType = splittedPeriod[1].Contains("дн.") ? PeriodTypeEnum.Day : PeriodTypeEnum.Month;
+                    creditPeriod.MinPeriodType = splittedPeriod[0].Contains("дн.") ? PeriodTypeEnum.Day : splittedPeriod[0].Contains("мес.") ? PeriodTypeEnum.Month : creditPeriod.MaxPeriodType;
+                    creditPeriod.IsInterval = true;
+                }
+                else
+                {
+                    creditPeriod.MaxPeriod = int.Parse(periodString.Replace("от", "").Replace("мес.", "").Replace("дн.", "").Trim());
+                    creditPeriod.MaxPeriodType = periodString.Contains("дн.") ? PeriodTypeEnum.Day : PeriodTypeEnum.Month;
+                    creditPeriod.IsInterval = false;
+                }
+                if (percentString.Contains("до"))
+                {
+                    if (percentString.Contains("от"))
+                    {
+                        creditPercent.MinPercent = double.Parse(percentString.Split("до")[0].Replace("от", "").Replace("%", "").Trim(), CultureInfo.InvariantCulture);
+                        creditPercent.MaxPercent = double.Parse(percentString.Split("до")[1].Replace("%", "").Trim(), CultureInfo.InvariantCulture);
+                        creditPercent.IsInterval = true;
+                    } else
+                    {
+                        creditPercent.MaxPercent = double.Parse(percentString.Replace("до", "").Replace("%", "").Trim(), CultureInfo.InvariantCulture);
+                        creditPercent.IsInterval = false;
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        creditPercent.MaxPercent = double.Parse(percentString.Replace("%", "").Trim(), CultureInfo.InvariantCulture);
+                    } catch (Exception)
+                    {
+                        creditPercent.MaxPercent = 0;
+                    }
+                    creditPercent.IsInterval = false;
+                }
+                if (isNewGroup)
+                {
+                    IDocument creditDetails = context.OpenAsync(creditDetailsURL).Result;
+                    creditDetails.QuerySelectorAll("tr").ToList().ForEach(element =>
+                    {
+                        if (element.InnerHtml.Contains("Без поручителей"))
+                            isGuarantorNeeded = element.InnerHtml.Contains("Нет");
+                        if (element.InnerHtml.Contains("Без справок"))
+                            isIncomeCertificationNeeded = element.InnerHtml.Contains("Нет");
+
+                    });
+                }
+                singleCredit.MinSum = minSum;
+                singleCredit.MaxSum = maxSum;
+                singleCredit.Period = creditPeriod;
+                singleCredit.Percent = creditPercent;
+                if (isNewGroup)
+                {
+                    if (!isFirstCredit)
+                    {
+                        creditList.Add(credit);
+                        credit = new Credit { SingleCreditList = new List<SingleCredit>() };
+                    }
+                    else
+                    {
+                        isFirstCredit = false;
+                    }
+                    singleCredit.IsGuarantorNeeded = isGuarantorNeeded;
+                    singleCredit.IsIncomeCertificationNeeded = isIncomeCertificationNeeded;
+                    credit.SingleCreditList.Add(singleCredit);
+                } else
+                {
+                    singleCredit.IsGuarantorNeeded = credit.SingleCreditList.First().IsGuarantorNeeded;
+                    singleCredit.IsIncomeCertificationNeeded = credit.SingleCreditList.First().IsIncomeCertificationNeeded;
+                    credit.SingleCreditList.Add(singleCredit);
+                }
+
+                //if (isNewGroup)
+                //    Console.WriteLine(creditInfoElement[0].TextContent);
+                //Console.WriteLine("Валюта: " + currency);
+                //Console.WriteLine("Минимальная сумма: " + minSum);
+                //Console.WriteLine("Максимальная сумма: " + maxSum);
+                //Console.WriteLine("Сроки:");
+                //if(creditPeriod.IsInterval)
+                //    Console.WriteLine("\tОт " + creditPeriod.MinPeriod + " " + creditPeriod.MinPeriodType.ToString());
+                //Console.WriteLine("\tДо " + creditPeriod.MaxPeriod + " " + creditPeriod.MaxPeriodType.ToString());
+                //Console.WriteLine("Проценты:");
+                //if (creditPercent.IsInterval)
+                //{
+                //    Console.WriteLine("\tОт " + creditPercent.MinPercent + "%");
+                //    Console.WriteLine("\tДо " + creditPercent.MaxPercent + "%");
+                //} else
+                //    Console.WriteLine("\t" + creditPercent.MaxPercent + "%");
+                //Console.WriteLine("Нужен поручитель: " + isGuarantorNeeded.ToString());
+                //Console.WriteLine("Нужны справки: " + isIncomeCertificationNeeded.ToString());
+            }
+            creditList.Add(credit);
+            return creditList;
         }
     }
 }

@@ -38,6 +38,9 @@ namespace FinancialCabinet.MappingProfile
             CreateMap<Credit, CreditModel>().ForMember(dest => dest.Bank, opt => opt.MapFrom(src => src.Bank));
             CreateMap<CreditModel, Credit>().ForMember(dest => dest.Bank, opt => opt.MapFrom(src => src.Bank));
 
+            CreateMap<SingleCredit, SingleCreditModel>();
+            CreateMap<SingleCreditModel, SingleCredit>();
+
             CreateMap<Bank, BankModel>();
             CreateMap<BankModel, Bank>();
         }

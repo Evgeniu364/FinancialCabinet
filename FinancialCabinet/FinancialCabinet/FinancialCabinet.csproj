@@ -5,6 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201115222943_UpdateCredit.cs" />
+    <Compile Remove="Migrations\20201115222943_UpdateCredit.Designer.cs" />
+    <Compile Remove="Migrations\20201115223107_UpdateCredit.cs" />
+    <Compile Remove="Migrations\20201115223107_UpdateCredit.Designer.cs" />
+    <Compile Remove="Migrations\20201115223344_UpdateCredit.cs" />
+    <Compile Remove="Migrations\20201115223344_UpdateCredit.Designer.cs" />
+    <Compile Remove="Migrations\20201115223444_UpdateCredit.cs" />
+    <Compile Remove="Migrations\20201115223444_UpdateCredit.Designer.cs" />
+    <Compile Remove="Migrations\20201115225022_UpdateCredit.cs" />
+    <Compile Remove="Migrations\20201115225022_UpdateCredit.Designer.cs" />
+    <Compile Remove="Migrations\20201115225508_Initial.cs" />
+    <Compile Remove="Migrations\20201115225508_Initial.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
 	<PackageReference Include="AngleSharp" Version="0.14.0" />
 	<PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" />

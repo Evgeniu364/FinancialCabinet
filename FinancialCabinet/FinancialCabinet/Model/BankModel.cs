@@ -18,5 +18,6 @@ namespace FinancialCabinet.Model
         public string BIK { get; set; }
         public string Information { get; set; }
         public List<Deposit> DepositList { get; set; }
+        public List<Credit> CreditList { get; set; }
     }
 }
