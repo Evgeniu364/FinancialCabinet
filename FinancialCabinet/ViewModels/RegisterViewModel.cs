@@ -40,6 +40,7 @@ namespace FinancialCabinet.ViewModels
         public string DocumentNumber { get; set; }
 
         [Display(Name = "Salary")]
+        [RegularExpression(@"[0-9]+,?[0-9]?", ErrorMessage = "Incorrect salary format.\nExample: 1250,1. (One digit after comma).")]
         public string Salary { get; set; }
 
         [Display(Name = "Company name")]
