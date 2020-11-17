@@ -47,13 +47,13 @@ namespace FinancialCabinet.Data
             Deposit.ToTable("Deposits");
             Deposit.HasKey(e => e.ID);
             Deposit.HasOne(e => e.Bank).WithMany(e => e.DepositList);
-            Deposit.HasMany(e => e.SingleDepositList).WithOne(e => e.Deposit);
+            Deposit.HasMany(e => e.SingleDepositList);
 
             EntityTypeBuilder<SingleDeposit> SingleDeposit = builder.Entity<SingleDeposit>();
             SingleDeposit.ToTable("SingleDeposit");
             SingleDeposit.HasOne(e => e.Deposit).WithMany(e => e.SingleDepositList);
-            SingleDeposit.HasOne(e => e.Period).WithOne(e => e.SingleDeposit).HasForeignKey<SingleDeposit>(e => e.PeriodID);
-            SingleDeposit.HasOne(e => e.Percent).WithOne(e => e.SingleDeposit).HasForeignKey<SingleDeposit>(e => e.PercentID);
+            SingleDeposit.HasOne(e => e.Period).WithOne(e => e.SingleDeposit).HasForeignKey<SingleDeposit>(e => e.PeriodID).OnDelete(DeleteBehavior.Cascade);
+            SingleDeposit.HasOne(e => e.Percent).WithOne(e => e.SingleDeposit).HasForeignKey<SingleDeposit>(e => e.PercentID).OnDelete(DeleteBehavior.Cascade);
             SingleDeposit.HasMany(e => e.LikeDepositList).WithOne(e => e.SingleDeposit);
 
             EntityTypeBuilder<Period> Period = builder.Entity<Period>();
@@ -83,8 +83,8 @@ namespace FinancialCabinet.Data
             EntityTypeBuilder<SingleCredit> SingleCredit = builder.Entity<SingleCredit>();
             SingleCredit.ToTable("SingleCredit");
             SingleCredit.HasOne(e => e.Credit).WithMany(e => e.SingleCreditList);
-            SingleCredit.HasOne(e => e.Period).WithOne(e => e.SingleCredit).HasForeignKey<SingleCredit>(e => e.PeriodID);
-            SingleCredit.HasOne(e => e.Percent).WithOne(e => e.SingleCredit).HasForeignKey<SingleCredit>(e => e.PercentID);
+            SingleCredit.HasOne(e => e.Period).WithOne(e => e.SingleCredit).HasForeignKey<SingleCredit>(e => e.PeriodID).OnDelete(DeleteBehavior.Cascade);
+            SingleCredit.HasOne(e => e.Percent).WithOne(e => e.SingleCredit).HasForeignKey<SingleCredit>(e => e.PercentID).OnDelete(DeleteBehavior.Cascade);
             SingleCredit.HasMany(e => e.LikeCreditList).WithOne(e => e.SingleCredit);
 
             EntityTypeBuilder<LikeCredit> LikeCredit = builder.Entity<LikeCredit>();

@@ -19,7 +19,7 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.Bank", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -48,11 +48,12 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.Credit", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("BankId")
+                    b.Property<string>("BankId")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.HasKey("ID");
@@ -64,11 +65,12 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.Deposit", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("BankID")
+                    b.Property<string>("BankID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.HasKey("ID");
@@ -80,7 +82,7 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.Individual", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -105,7 +107,8 @@ namespace FinancialCabinet.Migrations
                     b.Property<string>("TypeDocument")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<Guid>("UserID")
+                    b.Property<string>("UserID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
@@ -118,7 +121,7 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.LegalEntity", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -134,7 +137,8 @@ namespace FinancialCabinet.Migrations
                     b.Property<int>("Unp")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UserID")
+                    b.Property<string>("UserID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
@@ -147,17 +151,19 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.LikeCredit", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("CreditId")
+                    b.Property<string>("CreditId")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid?>("SingleCreditID")
+                    b.Property<string>("SingleCreditID")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("UserID")
+                    b.Property<string>("UserID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.HasKey("ID");
@@ -171,14 +177,16 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.LikeDeposit", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("SingleDepositID")
+                    b.Property<string>("SingleDepositID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("UserID")
+                    b.Property<string>("UserID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.HasKey("ID");
@@ -192,7 +200,7 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.Percent", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -205,10 +213,12 @@ namespace FinancialCabinet.Migrations
                     b.Property<double?>("MinPercent")
                         .HasColumnType("double");
 
-                    b.Property<Guid>("SingleCreditID")
+                    b.Property<string>("SingleCreditID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("SingleDepositID")
+                    b.Property<string>("SingleDepositID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.HasKey("ID");
@@ -218,7 +228,7 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.Period", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -237,10 +247,12 @@ namespace FinancialCabinet.Migrations
                     b.Property<int?>("MinPeriodType")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("SingleCreditID")
+                    b.Property<string>("SingleCreditID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("SingleDepositID")
+                    b.Property<string>("SingleDepositID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.HasKey("ID");
@@ -250,11 +262,12 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.Phone", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("BankID")
+                    b.Property<string>("BankID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.Property<string>("PhoneNumber")
@@ -269,7 +282,7 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.Role", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -296,11 +309,12 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.SingleCredit", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("CreditID")
+                    b.Property<string>("CreditID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Currency")
@@ -318,10 +332,12 @@ namespace FinancialCabinet.Migrations
                     b.Property<int>("MinSum")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("PercentID")
+                    b.Property<string>("PercentID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("PeriodID")
+                    b.Property<string>("PeriodID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.HasKey("ID");
@@ -339,14 +355,15 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.SingleDeposit", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Currency")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<Guid>("DepositID")
+                    b.Property<string>("DepositID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.Property<bool>("IsReplenishable")
@@ -355,10 +372,12 @@ namespace FinancialCabinet.Migrations
                     b.Property<bool>("IsRevocable")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<Guid>("PercentID")
+                    b.Property<string>("PercentID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("PeriodID")
+                    b.Property<string>("PeriodID")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.Property<int?>("Sum")
@@ -379,7 +398,7 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("FinancialCabinet.Entity.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -403,10 +422,10 @@ namespace FinancialCabinet.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<Guid?>("IndividualID")
+                    b.Property<string>("IndividualID")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid?>("LegalEntityID")
+                    b.Property<string>("LegalEntityID")
                         .HasColumnType("char(36)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -469,7 +488,8 @@ namespace FinancialCabinet.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<Guid>("RoleId")
+                    b.Property<string>("RoleId")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
@@ -491,7 +511,8 @@ namespace FinancialCabinet.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
@@ -512,7 +533,8 @@ namespace FinancialCabinet.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
@@ -524,10 +546,10 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("UserId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("RoleId")
+                    b.Property<string>("RoleId")
                         .HasColumnType("char(36)");
 
                     b.HasKey("UserId", "RoleId");
@@ -539,7 +561,7 @@ namespace FinancialCabinet.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("UserId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("LoginProvider")

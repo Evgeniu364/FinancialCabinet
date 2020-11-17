@@ -13,6 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FinancialCabinet.Entity;
+using FinancialCabinet.Service;
+using AutoMapper;
+using FinancialCabinet.Interface;
 
 namespace FinancialCabinet
 {
@@ -29,10 +32,25 @@ namespace FinancialCabinet
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
+
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile.MappingProfile());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddTransient<IIndividualManagementService, IndividualService>();
+            services.AddSingleton(mapper);
+            services.AddSingleton<ParserService>();
+            services.AddTransient<BankService>();
+            services.AddTransient<DepositService>();
+            services.AddTransient<CreditService>();
+            
             services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI();
+
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

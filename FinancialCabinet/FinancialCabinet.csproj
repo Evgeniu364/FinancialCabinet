@@ -5,8 +5,22 @@
     <UserSecretsId>aspnet-FinancialCabinet-0D43536E-2A8F-4924-99D1-0107EA989507</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20201117094916_test.cs" />
+    <Compile Remove="Migrations\20201117094916_test.Designer.cs" />
+    <Compile Remove="Migrations\20201117101327_test.cs" />
+    <Compile Remove="Migrations\20201117101327_test.Designer.cs" />
+    <Compile Remove="Migrations\20201117101356_test.cs" />
+    <Compile Remove="Migrations\20201117101356_test.Designer.cs" />
+    <Compile Remove="Migrations\20201117103824_AddCascadeDelete.cs" />
+    <Compile Remove="Migrations\20201117103824_AddCascadeDelete.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
+    <PackageReference Include="AngleSharp" Version="0.14.0" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0" />
