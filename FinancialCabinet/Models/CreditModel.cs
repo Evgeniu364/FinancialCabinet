@@ -12,5 +12,7 @@ namespace FinancialCabinet.Models
         public Guid ID { get; set; }
         public Guid BankId { get; set; }
         public BankModel Bank { get; set; }
+        public string CreditName { get; set; }
+        public List<SingleCreditModel> SingleCreditList { get; set; }
     }
 }

@@ -17,20 +17,22 @@ namespace FinancialCabinet.Controllers
     {
         private readonly ParserService parserService;
         private readonly BankService bankService;
+        private readonly CreditService creditService;
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
-        public CreditController(ParserService parserService, BankService bankService, IMapper mapper, ApplicationDbContext context)
+        public CreditController(ParserService parserService, BankService bankService, IMapper mapper, ApplicationDbContext context, CreditService creditService)
         {
             this.parserService = parserService;
             this.bankService = bankService;
+            this.creditService = creditService;
             this.mapper = mapper;
             this.context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            List<BankModel> bankModelList = await bankService.GetAllAsync();
-            return View(bankModelList);
+            List<CreditModel> creditModelList = await creditService.GetAllAsync();
+            return View(creditModelList);
         }
 
         public async Task<IActionResult> StartParser()

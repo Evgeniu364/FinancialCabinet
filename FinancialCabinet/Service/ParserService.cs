@@ -131,6 +131,8 @@ namespace FinancialCabinet.Service
                     deposit.SingleDepositList.Add(singleDeposit);
 
                 }
+                Console.WriteLine("Deposit: " + depositName);
+                deposit.DepositName = depositName;
                 depositList.Add(deposit);
             }
             depositsDocument.Dispose();
@@ -153,6 +155,7 @@ namespace FinancialCabinet.Service
             List<Credit> creditList = new List<Credit>();
             Credit credit = new Credit { ID = Guid.NewGuid(), SingleCreditList = new List<SingleCredit>() };
             bool isFirstCredit = true;
+            string lastCreditName = "";
             foreach (IElement creditElement in creditDivList)
             {
                 if (creditElement.InnerHtml.Contains("<td colspan=\"6\">"))
@@ -169,10 +172,15 @@ namespace FinancialCabinet.Service
                 string periodString = creditInfoElement[periodPos].TextContent;
                 string percentString = creditInfoElement[percentPos].TextContent;
                 string creditDetailsURL = "";
+                string creditName = "";
                 bool isGuarantorNeeded = true;
                 bool isIncomeCertificationNeeded = true;
                 if (isNewGroup)
+                {
+                    creditName = creditInfoElement[0].QuerySelector("a").InnerHtml;
                     creditDetailsURL = "https://myfin.by" + creditInfoElement[0].QuerySelector("a").GetAttribute("href");
+                    credit.CreditName = creditName;
+                }
                 int minSum = 0;
                 int maxSum = 0;
                 Period creditPeriod = new Period();
@@ -259,7 +267,7 @@ namespace FinancialCabinet.Service
                     singleCredit.IsIncomeCertificationNeeded = credit.SingleCreditList.First().IsIncomeCertificationNeeded;
                     credit.SingleCreditList.Add(singleCredit);
                 }
-
+                lastCreditName = creditInfoElement[0].QuerySelector("a").InnerHtml;
                 //if (isNewGroup)
                 //    Console.WriteLine(creditInfoElement[0].TextContent);
                 //Console.WriteLine("Валюта: " + currency);
@@ -279,6 +287,7 @@ namespace FinancialCabinet.Service
                 //Console.WriteLine("Нужен поручитель: " + isGuarantorNeeded.ToString());
                 //Console.WriteLine("Нужны справки: " + isIncomeCertificationNeeded.ToString());
             }
+            Console.WriteLine("Credit: " + credit.CreditName);
             creditList.Add(credit);
             return creditList;
         }

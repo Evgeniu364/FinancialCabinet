@@ -1,9 +1,54 @@
-﻿
+﻿@model List<CreditModel>
 @{
     ViewData["Title"] = "Credit";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+    <h2>
+        Таблица микрозаймов
+    </h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CreditModel credit in Model)
+            {
+                <tr>
+                    <td>
+                        <strong>
+                            @credit.CreditName
+                        </strong>
+                    </td>
+                    @if (credit.SingleCreditList.First().MinSum == 0)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td>@credit.SingleCreditList.First().MinSum</td>
+                        <td>@credit.SingleCreditList.First().MaxSum</td>
+                    }
+                    <td>@credit.SingleCreditList.First().MaxSum</td>
+                    <td>@credit.SingleCreditList.First().Period.MaxPeriod</td>
+                    <td>@credit.SingleCreditList.First().Percent.MaxPercent</td>
+                </tr>
+                    @if (credit.SingleCreditList.Count > 1)
+                    {
+                        @foreach (SingleCreditModel singleCredit in credit.SingleCreditList.Skip(1))
+                        {
+                            <tr>
+                                <td></td>
+                                <td>@credit.SingleCreditList.First().MaxSum</td>
+                                <td>@credit.SingleCreditList.First().MinSum</td>
+                                <td>@credit.SingleCreditList.First().Period.MaxPeriod</td>
+                                <td>@credit.SingleCreditList.First().Percent.MaxPercent</td>
+                            </tr>
+                        }
+                    }
+            }
+        </tbody>
+    </table>
 </div>
