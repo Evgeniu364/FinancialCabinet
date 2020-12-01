@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FinancialCabinet.Interface
 {
-    public interface IPeriod
+    public interface IPeriod: IComparable<IPeriod>
     {
         public Guid ID { get; set; }
         public int? MinPeriod { get; set; }

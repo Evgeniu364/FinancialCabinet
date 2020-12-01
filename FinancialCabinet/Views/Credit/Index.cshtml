@@ -2,53 +2,230 @@
 @{
     ViewData["Title"] = "Credit";
 }
+<div class="main">
 
-<div>
     <h2>
         Таблица микрозаймов
     </h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <td></td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (CreditModel credit in Model)
-            {
+
+    <div id="searchPanel" style="margin: 30px; display: none">
+        <form method="get" asp-controller="Credit" asp-action="Index">
+            <div class="filter">
+                <div class="filter-container">
+                    <div class="filter-text-container">
+                        <div class="filter-text">
+                            Сортировать:
+                        </div>
+                        <div class="filter-text">
+                            Валюта:
+                        </div>
+                        <div class="filter-text">
+                            Максимальная сумма от:
+                        </div>
+                        <div class="filter-text">
+                            Срок до:
+                        </div>
+                        <div class="filter-text">
+                            Процентная ставка до:
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <select name="sortingType" class="filter-input">
+                                <option>
+                                    -
+                                </option>
+                                <option value="0">
+                                    По минимальной сумме вклада (a-z)
+                                </option>
+                                <option value="1">
+                                    По минимальной сумме вклада (z-a)
+                                </option>
+                                <option value="2">
+                                    По минимальному сроку (a-z)
+                                </option>
+                                <option value="3">
+                                    По минимальному сроку (z-a)
+                                </option>
+                                <option value="4">
+                                    По процентной ставке (a-z)
+                                </option>
+                                <option value="5">
+                                    По процентной ставке (z-a)
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <select name="currencyParam" class="filter-input">
+                                <option value="@null">
+                                    -
+                                </option>
+                                <option value="BYN">
+                                    BYN
+                                </option>
+                                <option value="RUB">
+                                    RUB
+                                </option>
+                                <option value="USD">
+                                    USD
+                                </option>
+                                <option value="EUR">
+                                    EUR
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="number" maxlength="10" name="maxAmount" class="filter-input" />
+                        </div>
+                        <div>
+                            <input type="number" maxlength="10" name="periodTo" class="filter-input" />
+                        </div>
+                        <div>
+                            <input type="number" step="0.01" name="maxPercent" class="filter-input" />
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" value="Применить" class="filter-input button-credit" />
+            </div>
+        </form>
+    </div>
+    <div style="margin-bottom: 30px; width: 50%;">
+        <button id="openSearch" style="width: 100%;" class="button-credit">
+            Поиск
+        </button>
+    </div>
+    <div>
+        <table class="table sticky-table">
+            <thead>
                 <tr>
-                    <td>
-                        <strong>
-                            @credit.CreditName
-                        </strong>
-                    </td>
-                    @if (credit.SingleCreditList.First().MinSum == 0)
-                    {
-                        <td></td>
-                    }
-                    else
-                    {
-                        <td>@credit.SingleCreditList.First().MinSum</td>
-                        <td>@credit.SingleCreditList.First().MaxSum</td>
-                    }
-                    <td>@credit.SingleCreditList.First().MaxSum</td>
-                    <td>@credit.SingleCreditList.First().Period.MaxPeriod</td>
-                    <td>@credit.SingleCreditList.First().Percent.MaxPercent</td>
+                    <th class="th-header">
+                        #
+                    </th>
+                    <th class="th-header">
+                        Название
+                    </th>
+                    <th class="th-header">
+                        Валюта
+                    </th>
+                    <th class="th-header">
+                        Мин. Сумма
+                    </th>
+                    <th class="th-header">
+                        Макс. Сумма
+                    </th>
+                    <th class="th-header">
+                        Срок
+                    </th>
+                    <th class="th-header">
+                        Ставка
+                    </th>
                 </tr>
+            </thead>
+            <tbody>
+                @{int i = 0;}
+                @foreach (CreditModel credit in Model)
+                {
+                    i++;
+                    <tr class="table-row">
+                        <th rowspan="@credit.SingleCreditList.Count" style="vertical-align: middle;">
+                            @i
+                        </th>
+                        <td rowspan="@credit.SingleCreditList.Count" style="vertical-align: middle;">
+                            @credit.CreditName
+                        </td>
+                        <td>
+                            @credit.SingleCreditList.First().Currency
+                        </td>
+                        @if (credit.SingleCreditList.First().MinSum == 0)
+                        {
+                            <td>-</td>
+                            <td>@credit.SingleCreditList.First().MaxSum</td>
+                        }
+                        else if (credit.SingleCreditList.First().MaxSum == 0)
+                        {
+                            <td>@credit.SingleCreditList.First().MinSum</td>
+                            <td>-</td>
+                        }
+                        else
+                        {
+                            <td>@credit.SingleCreditList.First().MinSum</td>
+                            <td>@credit.SingleCreditList.First().MaxSum</td>
+                        }
+                        @if (credit.SingleCreditList.First().Period.IsInterval)
+                        {
+                            string minPType = credit.SingleCreditList.First().Period.MinPeriodType == 0 ? "дн." : "мес.";
+                            string maxPType = credit.SingleCreditList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                            <td style="width: 10%">От @credit.SingleCreditList.First().Period.MinPeriod.Value @minPType До @credit.SingleCreditList.First().Period.MaxPeriod @maxPType</td>
+                        }
+                        else
+                        {
+                            string maxPType = credit.SingleCreditList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                            <td style="width: 10%">До @credit.SingleCreditList.First().Period.MaxPeriod @maxPType</td>
+                        }
+                        @if (@credit.SingleCreditList.First().Percent.MaxPercent == 0)
+                        {
+                            <td>-</td>
+                        }
+                        else
+                        {
+                            <td>@credit.SingleCreditList.First().Percent.MaxPercent%</td>
+                        }
+                    </tr>
                     @if (credit.SingleCreditList.Count > 1)
                     {
                         @foreach (SingleCreditModel singleCredit in credit.SingleCreditList.Skip(1))
                         {
-                            <tr>
-                                <td></td>
-                                <td>@credit.SingleCreditList.First().MaxSum</td>
-                                <td>@credit.SingleCreditList.First().MinSum</td>
-                                <td>@credit.SingleCreditList.First().Period.MaxPeriod</td>
-                                <td>@credit.SingleCreditList.First().Percent.MaxPercent</td>
+                            <tr class="table-row">
+                                <td>@singleCredit.Currency</td>
+                                <td>@singleCredit.MinSum</td>
+                                @if (singleCredit.MaxSum != 0)
+                                {
+                                    <td>@singleCredit.MaxSum</td>
+                                }
+                                else
+                                {
+                                    <td>-</td>
+                                }
+                                @if (singleCredit.Period.IsInterval)
+                                {
+                                    string minPType = singleCredit.Period.MinPeriodType == 0 ? "дн." : "мес.";
+                                    string maxPType = singleCredit.Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                                    <td style="width: 10%">От @singleCredit.Period.MinPeriod.Value @minPType До @singleCredit.Period.MaxPeriod @maxPType</td>
+                                }
+                                else
+                                {
+                                    string maxPType = singleCredit.Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                                    <td style="width: 10%">До @singleCredit.Period.MaxPeriod @maxPType</td>
+                                }
+                                @if (singleCredit.Percent.MaxPercent == 0)
+                                {
+                                    <td>-</td>
+                                }
+                                else
+                                {
+                                    <td>@singleCredit.Percent.MaxPercent%</td>
+                                }
                             </tr>
                         }
                     }
-            }
-        </tbody>
-    </table>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script>
+        var isOpened = false;
+        $(document).ready(function () {
+            $("#openSearch").click(function () {
+                if (isOpened) {
+                    $("div#searchPanel").slideUp("fast");
+                    isOpened = false;
+                } else {
+                    $("div#searchPanel").slideDown("fast");
+                    isOpened = true;
+                }
+            })
+        });
+    </script>
 </div>

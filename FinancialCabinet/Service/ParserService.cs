@@ -22,7 +22,7 @@ namespace FinancialCabinet.Service
             Console.WriteLine("Start parsing banks... ");
             IConfiguration config = Configuration.Default.WithDefaultLoader();
             IBrowsingContext context = BrowsingContext.New(config);
-            ParseCredits(context, "https://myfin.by/bank/belarusbank");
+            //ParseCredits(context, "https://myfin.by/bank/belarusbank");
             IDocument document = context.OpenAsync("https://myfin.by/banki").Result;
             IElement banksTable = document.QuerySelectorAll("table[class*='rates-table-sort']").First();
             List<Bank> bankList = new List<Bank>();
@@ -51,7 +51,7 @@ namespace FinancialCabinet.Service
                     PhoneList = bankPhoneNumbers,
                     Address = bankAddress,
                     DepositList = ParseDeposits(context, bankURL),
-                    CreditList = ParseCredits(context, bankURL )
+                    CreditList = ParseCredits(context, bankURL)
                 };
                 bankList.Add(bank);
                 //return bankList;
@@ -60,6 +60,7 @@ namespace FinancialCabinet.Service
             document.Dispose();
             Console.WriteLine("complete");
             return bankList;
+            //return null;
         }
 
         private List<Deposit> ParseDeposits(IBrowsingContext context, string bankURL)
@@ -177,9 +178,11 @@ namespace FinancialCabinet.Service
                 bool isIncomeCertificationNeeded = true;
                 if (isNewGroup)
                 {
+
                     creditName = creditInfoElement[0].QuerySelector("a").InnerHtml;
                     creditDetailsURL = "https://myfin.by" + creditInfoElement[0].QuerySelector("a").GetAttribute("href");
-                    credit.CreditName = creditName;
+                    if (isFirstCredit)
+                        credit.CreditName = creditName;
                 }
                 int minSum = 0;
                 int maxSum = 0;
@@ -243,31 +246,42 @@ namespace FinancialCabinet.Service
 
                     });
                 }
-                singleCredit.MinSum = minSum;
-                singleCredit.MaxSum = maxSum;
-                singleCredit.Period = creditPeriod;
-                singleCredit.Percent = creditPercent;
                 if (isNewGroup)
                 {
                     if (!isFirstCredit)
                     {
                         creditList.Add(credit);
                         credit = new Credit { SingleCreditList = new List<SingleCredit>() };
+                        credit.CreditName = creditName;
                     }
                     else
                     {
+                        singleCredit.IsGuarantorNeeded = isGuarantorNeeded;
+                        singleCredit.IsIncomeCertificationNeeded = isIncomeCertificationNeeded;
+                        singleCredit.MinSum = minSum;
+                        singleCredit.MaxSum = maxSum;
+                        singleCredit.Period = creditPeriod;
+                        singleCredit.Percent = creditPercent;
                         isFirstCredit = false;
                     }
+                    credit.SingleCreditList.Add(singleCredit);
                     singleCredit.IsGuarantorNeeded = isGuarantorNeeded;
                     singleCredit.IsIncomeCertificationNeeded = isIncomeCertificationNeeded;
-                    credit.SingleCreditList.Add(singleCredit);
+                    singleCredit.MinSum = minSum;
+                    singleCredit.MaxSum = maxSum;
+                    singleCredit.Period = creditPeriod;
+                    singleCredit.Percent = creditPercent;
                 } else
                 {
                     singleCredit.IsGuarantorNeeded = credit.SingleCreditList.First().IsGuarantorNeeded;
                     singleCredit.IsIncomeCertificationNeeded = credit.SingleCreditList.First().IsIncomeCertificationNeeded;
+                    singleCredit.MinSum = minSum;
+                    singleCredit.MaxSum = maxSum;
+                    singleCredit.Period = creditPeriod;
+                    singleCredit.Percent = creditPercent;
                     credit.SingleCreditList.Add(singleCredit);
                 }
-                lastCreditName = creditInfoElement[0].QuerySelector("a").InnerHtml;
+                //lastCreditName = creditInfoElement[0].QuerySelector("a").InnerHtml;
                 //if (isNewGroup)
                 //    Console.WriteLine(creditInfoElement[0].TextContent);
                 //Console.WriteLine("Валюта: " + currency);
