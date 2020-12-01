@@ -18,7 +18,7 @@ namespace FinancialCabinet.Models
         public Guid DepositID { get; set; }
         public Guid PeriodID { get; set; }
         public Guid PercentID { get; set; }
-        public Deposit Deposit { get; set; }
+        public DepositModel DepositModel { get; set; }
         public Period Period { get; set; }
         public Percent Percent { get; set; }
         public List<LikeDeposit> LikeDepositList { get; set; }
