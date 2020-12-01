@@ -37,6 +37,14 @@ namespace FinancialCabinet.Service
             return modelList;
         }
 
+        public virtual async Task<List<TModel>> GetAllAsync(Dictionary<string, object> sortParams)
+        {
+            List<TEntity> entityList = await dbset.ToListAsync();
+            List<TModel> modelList = mapper.Map<List<TModel>>(entityList);
+
+            return modelList;
+        }
+
         public virtual async Task<int> GetTotalAsync()
         {
             return await dbset.CountAsync();

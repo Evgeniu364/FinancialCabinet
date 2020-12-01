@@ -21,5 +21,6 @@ namespace FinancialCabinet.Entity
         public Period Period { get; set; }
         public Percent Percent { get; set; }
         public List<LikeDeposit> LikeDepositList { get; set; }
+        public List<GroupDeposit> GroupDepositList { get; set; }
     }
 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace FinancialCabinet.Controllers
 {
-    public class CreditController: Controller
+    public class CreditController : Controller
     {
         private readonly ParserService parserService;
         private readonly BankService bankService;
@@ -29,10 +29,27 @@ namespace FinancialCabinet.Controllers
             this.context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? sortingType, string currencyParam, double? minAmount, double? maxAmount, int? periodFrom, int? periodTo, double? maxPercent)
         {
-            List<CreditModel> creditModelList = await creditService.GetAllAsync();
+            List<CreditModel> creditModelList;
+            //if (sortingType.HasValue)
+            //{
+            creditModelList = await creditService.GetAllAsync(new Dictionary<string, object>() { { "sortingType", sortingType },
+                { "currencyParam", currencyParam },
+                { "minAmount", minAmount },
+                { "maxAmount", maxAmount },
+                { "periodFrom", periodFrom },
+                { "periodTo", periodTo },
+                { "maxPercent", maxPercent } });
+            //}
+            //else
+            //    creditModelList = await creditService.GetAllAsync();
             return View(creditModelList);
+        }
+
+        public async Task<IActionResult> Test(int sortingParam)
+        {
+            return Content(sortingParam.ToString());
         }
 
         public async Task<IActionResult> StartParser()
