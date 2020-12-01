@@ -10,6 +10,7 @@ namespace FinancialCabinet.Entity
         public DateTime DateRegistration { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
+        public int GroupNumber { get; set; }
         public List<LikeDeposit> LikeDepositList { get; set; } 
         public Individual Individual { get; set; }
         public LegalEntity LegalEntity { get; set; }

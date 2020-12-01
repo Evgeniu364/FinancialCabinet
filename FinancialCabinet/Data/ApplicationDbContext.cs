@@ -17,6 +17,8 @@ namespace FinancialCabinet.Data
         public virtual DbSet<Credit> Credits { get; set; }
         public virtual DbSet<Bank> Banks { get; set; }
         public virtual DbSet<LegalEntity> LegalEntity { get; set; }
+        public virtual DbSet<GroupDeposit> GroupDeposit { get; set; }
+        public virtual DbSet<GroupCredit> GroupCredit { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -55,6 +57,7 @@ namespace FinancialCabinet.Data
             SingleDeposit.HasOne(e => e.Period).WithOne(e => e.SingleDeposit).HasForeignKey<SingleDeposit>(e => e.PeriodID).OnDelete(DeleteBehavior.Cascade);
             SingleDeposit.HasOne(e => e.Percent).WithOne(e => e.SingleDeposit).HasForeignKey<SingleDeposit>(e => e.PercentID).OnDelete(DeleteBehavior.Cascade);
             SingleDeposit.HasMany(e => e.LikeDepositList).WithOne(e => e.SingleDeposit);
+            SingleDeposit.HasMany(e => e.GroupDepositList).WithOne(e => e.SingleDeposit);
 
             EntityTypeBuilder<Period> Period = builder.Entity<Period>();
             Period.ToTable("Period");
@@ -86,6 +89,7 @@ namespace FinancialCabinet.Data
             SingleCredit.HasOne(e => e.Period).WithOne(e => e.SingleCredit).HasForeignKey<SingleCredit>(e => e.PeriodID).OnDelete(DeleteBehavior.Cascade);
             SingleCredit.HasOne(e => e.Percent).WithOne(e => e.SingleCredit).HasForeignKey<SingleCredit>(e => e.PercentID).OnDelete(DeleteBehavior.Cascade);
             SingleCredit.HasMany(e => e.LikeCreditList).WithOne(e => e.SingleCredit);
+            SingleCredit.HasMany(e => e.GroupCreditList).WithOne(e => e.SingleCredit);
 
             EntityTypeBuilder<LikeCredit> LikeCredit = builder.Entity<LikeCredit>();
             LikeCredit.ToTable("LikeCredit");

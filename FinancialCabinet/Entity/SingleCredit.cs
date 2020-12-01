@@ -21,5 +21,6 @@ namespace FinancialCabinet.Entity
         public bool IsGuarantorNeeded { get; set; }
         public bool IsIncomeCertificationNeeded { get; set; }
         public List<LikeCredit> LikeCreditList { get; set; }
+        public List<GroupCredit> GroupCreditList { get; set; }
     }
 }
