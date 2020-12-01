@@ -14,6 +14,6 @@ namespace FinancialCabinet.Models
         public Guid BankID { get; set; }
         public Bank Bank { get; set; }
         public string DepositName { get; set; }
-        public List<SingleDeposit> SingleDepositList { get; set; }
+        public List<SingleDepositModel> SingleDepositList { get; set; }
     }
 }

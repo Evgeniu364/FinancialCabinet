@@ -1,0 +1,193 @@
+﻿@model List<DepositModel>
+@{
+    ViewData["Title"] = "Вклады";
+}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+<link href="~/css/likeButton.css"/>
+
+<div class="main">
+
+    <h2>
+        Таблица вкладов
+    </h2>
+
+    <div id="searchPanel" style="margin: 30px; display: none">
+        <form method="get" asp-controller="Deposite" asp-action="Index">
+            <div class="filter">
+                <div class="filter-container">
+                    <div class="filter-text-container">
+                        <div class="filter-text">
+                            Сортировать:
+                        </div>
+                        <div class="filter-text">
+                            Валюта:
+                        </div>
+                        <div class="filter-text">
+                            Срок до:
+                        </div>
+                        <div class="filter-text">
+                            Процентная ставка до:
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <select name="sortingType" class="filter-input">
+                                <option>
+                                    -
+                                </option>
+                                <option value="0">
+                                    По минимальному сроку (a-z)
+                                </option>
+                                <option value="1">
+                                    По минимальному сроку (z-a)
+                                </option>
+                                <option value="2">
+                                    По процентной ставке (a-z)
+                                </option>
+                                <option value="3">
+                                    По процентной ставке (z-a)
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <select name="currencyParam" class="filter-input">
+                                <option value="@null">
+                                    -
+                                </option>
+                                <option value="BYN">
+                                    BYN
+                                </option>
+                                <option value="RUB">
+                                    RUB
+                                </option>
+                                <option value="USD">
+                                    USD
+                                </option>
+                                <option value="EUR">
+                                    EUR
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="number" maxlength="10" name="periodTo" class="filter-input" />
+                        </div>
+                        <div>
+                            <input type="number" step="0.01" name="maxPercent" class="filter-input" />
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" value="Применить" class="filter-input button-credit" />
+            </div>
+        </form>
+    </div>
+    <div style="margin-bottom: 30px; width: 50%;">
+        <button id="openSearch" style="width: 100%;" class="button-credit">
+            Поиск
+        </button>
+    </div>
+    <div>
+        <table class="table sticky-table">
+            <thead>
+                <tr>
+                    <th class="th-header">
+                        #
+                    </th>
+                    <th class="th-header">
+                        Название
+                    </th>
+                    <th class="th-header">
+                        Валюта
+                    </th>
+                    <th class="th-header">
+                        Срок
+                    </th>
+                    <th class="th-header">
+                        Ставка
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int i = 0;}
+                @foreach (DepositModel deposit in Model)
+                {
+                    i++;
+                    <tr class="table-row">
+                        <th rowspan="@deposit.SingleDepositList.Count" style="vertical-align: middle;">
+                            @i
+                        </th>
+                        <td rowspan="@deposit.SingleDepositList.Count" style="vertical-align: middle;">
+                            @deposit.DepositName
+                        </td>
+                        <td>
+                            @deposit.SingleDepositList.First().Currency
+                        </td>
+                        @if (deposit.SingleDepositList.First().Period.IsInterval)
+                        {
+                            string minPType = deposit.SingleDepositList.First().Period.MinPeriodType == 0 ? "дн." : "мес.";
+                            string maxPType = deposit.SingleDepositList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                            <td style="width: 10%">От @deposit.SingleDepositList.First().Period.MinPeriod.Value @minPType До @deposit.SingleDepositList.First().Period.MaxPeriod @maxPType</td>
+                        }
+                        else
+                        {
+                            string maxPType = deposit.SingleDepositList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                            <td style="width: 10%">До @deposit.SingleDepositList.First().Period.MaxPeriod @maxPType</td>
+                        }
+                        @if (deposit.SingleDepositList.First().Percent.MaxPercent == 0)
+                        {
+                            <td>-</td>
+                        }
+                        else
+                        {
+                            <td>@deposit.SingleDepositList.First().Percent.MaxPercent%</td>
+                        }
+                    </tr>
+                    @if (deposit.SingleDepositList.Count > 1)
+                    {
+                        @foreach (SingleDepositModel singleDeposite in deposit.SingleDepositList.Skip(1))
+                        {
+                            <tr class="table-row">
+                                <td>@singleDeposite.Currency</td>
+                                @if (singleDeposite.Period.IsInterval)
+                                {
+                                    string minPType = singleDeposite.Period.MinPeriodType == 0 ? "дн." : "мес.";
+                                    string maxPType = singleDeposite.Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                                    <td style="width: 10%">От @singleDeposite.Period.MinPeriod.Value @minPType До @singleDeposite.Period.MaxPeriod @maxPType</td>
+                                }
+                                else
+                                {
+                                    string maxPType = singleDeposite.Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                                    <td style="width: 10%">До @singleDeposite.Period.MaxPeriod @maxPType</td>
+                                }
+                                @if (singleDeposite.Percent.MaxPercent == 0)
+                                {
+                                    <td>-</td>
+                                }
+                                else
+                                {
+                                    <td>@singleDeposite.Percent.MaxPercent%</td>
+                                }
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script>
+        var isOpened = false;
+        $(document).ready(function () {
+            $("#openSearch").click(function () {
+                if (isOpened) {
+                    $("div#searchPanel").slideUp("fast");
+                    isOpened = false;
+                } else {
+                    $("div#searchPanel").slideDown("fast");
+                    isOpened = true;
+                }
+            })
+        });
+    </script>
+</div>
