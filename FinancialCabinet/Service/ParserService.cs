@@ -17,6 +17,37 @@ namespace FinancialCabinet.Service
 
     public class ParserService
     {
+        public Dictionary<string, List<string>> infoForBank = new Dictionary<string, List<string>>
+        {
+            ["Абсолютбанк"] = new List<string>{ "obg@absolutbank.by", "100331707", "ABLT BY 22", "Год основания: 1993" },
+            ["Банк ВТБ (Беларусь)"] = new List<string> { "info@vtb.by", "101165625", "SLANBY22", "Год основания: 1996" },
+            ["Белагропромбанк"] = new List<string> { "info@belapb.by", "100693551", "BAPBBY2X", "Год основания: 1991" },
+            ["Альфа-Банк"] = new List<string> { "help@alfa-bank.by", "101541947", "ALFABY2X", "Год основания: 1990" },
+            ["Паритетбанк (Paritetbank)"] = new List<string> { "info@paritetbank.by", "100233809", "POISBY2X", "Год основания: 1991" },
+            ["Белинвестбанк"] = new List<string> { "callcenter@belinvestbank.by", "807000028", "BLBBBY2X", "Год основания: 2001" },
+            ["Беларусбанк"] = new List<string> { "info@belarusbank.by", "100325912", "AKBBBY2X", "Год основания: 1922" },
+            ["БНБ-Банк"] = new List<string> { "customer@bnb.by", "100513485", "BLNBBY2X", "Год основания: 1992" },
+            ["МТБанк"] = new List<string> { "mybank@mtbank.by", "100394906", "MTBKBY22", "Год основания: 1994" },
+            ["Банк Решение"] = new List<string> { "office@rbank.by", "100789114", "RSHNBY2X", "Год основания: 1994" },
+            ["Франсабанк"] = new List<string> { "office@fransabank.by", "100755021", "GTBN BY 22", "Год основания: 1994" },
+            ["БПС-Сбербанк"] = new List<string> { "inbox@bps-sberbank.by", "100219673", "BPSBBY2X", "Год основания: 2009" },
+            ["Приорбанк"] = new List<string> { "inform@priorbank.by", "100220190", "PJCBBY2X", "Год основания: 1989" },
+            ["БСБ Банк"] = new List<string> { "info@bsb.by", "807000069", "UNBSBY2X", "Год основания: 2002" },
+            ["Белгазпромбанк"] = new List<string> { "bank@bgpb.by", "100429079", "OLMPBY2X", "Год основания: 1990" },
+            ["Банк Дабрабыт"] = new List<string> { "bank@bankdabrabyt.by", "807000002", "MMBNBY22", "Год основания: 2000" },
+            ["Банк БелВЭБ"] = new List<string> { "media@belveb.by", "100010078", "BELBBY2X", "Год основания: 1991" },
+            ["Идея Банк"] = new List<string> { "bank@ideabank.by", "807000122", "SOMABY22", "Год основания: 2004" },
+            ["ТК Банк"] = new List<string> { "info@tcbank.by", "807000163", "BBTKBY2X", "Год основания: 2008" },
+            ["Цептер Банк"] = new List<string> { "info@zepterbank.by", "807000214", "ZEPTBY2X", "Год основания: 2011" },
+            ["Технобанк"] = new List<string> { "info@tb.by", "100706562", "TECNBY22", "Год основания: 1994" },
+            ["РРБ-Банк"] = new List<string> { "info@rrbbank.by", "100361187", "REDJBY22", "Год основания: 1994" },
+            ["СтатусБанк"] = new List<string> { "bank@stbank.by", "807000043", "IRJSBY22", "Год основания: 2002" },
+            ["БТА Банк"] = new List<string> { "bank@btabank.by", "807000071", "AEBKBY2X", "Год основания: 1991" }
+        };
+
+        //foreach(var pair in countries)
+        //    Console.WriteLine("{0} - {1}", pair.Key, pair.Value);
+
         public List<Bank> ParseBanks()
         {
             Console.WriteLine("Start parsing banks... ");
@@ -48,10 +79,14 @@ namespace FinancialCabinet.Service
                 {
                     ID = Guid.NewGuid(),
                     Name = bankName,
-                    PhoneList = bankPhoneNumbers,
                     Address = bankAddress,
+                    Email = infoForBank[bankName][0],
+                    BankAccount = infoForBank[bankName][1],
+                    BIK = infoForBank[bankName][2],
+                    Information = infoForBank[bankName][3],
                     DepositList = ParseDeposits(context, bankURL),
-                    CreditList = ParseCredits(context, bankURL )
+                    CreditList = ParseCredits(context, bankURL ),
+                    PhoneList = bankPhoneNumbers,
                 };
                 bankList.Add(bank);
                 //return bankList;
@@ -267,7 +302,7 @@ namespace FinancialCabinet.Service
                     singleCredit.IsIncomeCertificationNeeded = credit.SingleCreditList.First().IsIncomeCertificationNeeded;
                     credit.SingleCreditList.Add(singleCredit);
                 }
-                lastCreditName = creditInfoElement[0].QuerySelector("a").InnerHtml;
+                //lastCreditName = creditInfoElement[0].QuerySelector("a").InnerHtml;
                 //if (isNewGroup)
                 //    Console.WriteLine(creditInfoElement[0].TextContent);
                 //Console.WriteLine("Валюта: " + currency);
