@@ -70,7 +70,7 @@ namespace FinancialCabinet.Service
             {
                 modelList.ForEach(model => model.SingleCreditList = model.SingleCreditList.Where(singleCredit => singleCredit.Percent.MaxPercent <= maxPercent.Value).ToList());
             }
-            modelList = modelList.Where(model => model.SingleCreditList.Count > 0).ToList();
+            modelList = modelList.Where(model => model.SingleCreditList.Count > 0).Take(30).ToList();
             if (sortType.HasValue)
             {
                 switch (sortType.Value)
@@ -86,7 +86,7 @@ namespace FinancialCabinet.Service
                         return modelList.OrderBy(model => model.SingleCreditList.First().Period).ToList();
                     case 3:
                         modelList.ForEach(model => model.SingleCreditList = model.SingleCreditList.OrderBy(singleCredit => singleCredit.Period).Reverse().ToList());
-                        return modelList.OrderBy(model => model.SingleCreditList.First().Period).Reverse().ToList();
+                        return modelList.OrderBy(model => model.SingleCreditList.First()?.Period).Reverse().ToList();
                     case 4:
                         modelList.ForEach(model => model.SingleCreditList = model.SingleCreditList.OrderBy(singleCredit => singleCredit.Percent.MaxPercent).ToList());
                         return modelList.Where(singleCredit => singleCredit.SingleCreditList.First().Percent.MaxPercent != 0).OrderBy(singleCredit => singleCredit.SingleCreditList.First().Percent.MaxPercent).Union(modelList.Where(model => model.SingleCreditList.All(singleCredit => singleCredit.Percent.MaxPercent == 0))).ToList();

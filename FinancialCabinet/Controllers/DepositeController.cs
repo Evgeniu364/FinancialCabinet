@@ -28,16 +28,15 @@ namespace FinancialCabinet.Controllers
         public async Task<IActionResult> Index(int? sortingType, string currencyParam, int? periodFrom, int? periodTo, double? maxPercent)
         {
             List<DepositModel> depositModelsList;
-            //if (sortingType.HasValue)
-            //{
+
             depositModelsList = await depositService.GetAllAsync(new Dictionary<string, object>() { { "sortingType", sortingType },
                 { "currencyParam", currencyParam },
                 { "periodFrom", periodFrom },
                 { "periodTo", periodTo },
-                { "maxPercent", maxPercent } });
-            //}
-            //else
-            //    creditModelList = await creditService.GetAllAsync();
+                { "maxPercent", maxPercent },
+                { "isForBusiness", User.IsInRole("Business") }
+            });
+
             return View(depositModelsList);
         }
     }

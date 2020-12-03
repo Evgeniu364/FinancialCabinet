@@ -24,10 +24,13 @@ namespace FinancialCabinet.Entity
 
         public int CompareTo(IPeriod period)
         {
+            if (ID == period.ID)
+                return 0;
             if (!MinPeriod.HasValue && period == null)
                 return 0;
             if (!MinPeriod.HasValue)
-                return -1;
+                // Вместо 0 должно быть -1, но я не ебу, почему с -1 не работает, поэтому 0;
+                return 0;
             if (period == null)
                 return 1;
             if (MinPeriod.Value < period.MinPeriod)
