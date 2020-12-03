@@ -7,14 +7,14 @@
 @model LoginViewModel
 @inject SignInManager<User> SignInManager
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Вход";
 }
 <h2>@ViewData["Title"]</h2>
 <div class="row">
     <div class="col-md-4">
         <section>
             <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-                <h4>Use a local account to log in.</h4>
+                <h4>Используйте локальную учетную запись для входа в систему.</h4>
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
@@ -36,14 +36,14 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default">Log in</button>
+                    <button type="submit" class="btn btn-default">Вход</button>
                 </div>
                 <div class="form-group">
                     <p>
-                        <a asp-action="ForgotPassword">Forgot your password?</a>
+                        <a asp-action="ForgotPassword">Забыли пароль?</a>
                     </p>
                     <p>
-                        <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
+                        <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Зарегестрироваться как новый пользователь?</a>
                     </p>
                 </div>
             </form>
@@ -51,7 +51,7 @@
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
-            <h4>Use another service to log in.</h4>
+            <h4>Используйте другой сервис для входа.</h4>
             <hr />
             @{
                 var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -59,8 +59,8 @@
                 {
                     <div>
                         <p>
-                            There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                            for details on setting up this ASP.NET application to support logging in via external services.
+                            Не настроены внешние службы аутентификации. Увидеть <a href="https://go.microsoft.com/fwlink/?LinkID=532715">эту статья</a>
+                            для получения дополнительных сведений о настройке этого приложения ASP.NET для поддержки входа в систему через внешние службы.
                         </p>
                     </div>
                 }
@@ -71,7 +71,7 @@
                             <p>
                                 @foreach (var provider in loginProviders)
                                 {
-                                    <button type="submit" class="btn btn-default" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.Name</button>
+                                    <button type="submit" class="btn btn-default" name="provider" value="@provider.Name" title="Войдите, используя ваш @provider.DisplayName аккаунт">@provider.Name</button>
                                 }
                             </p>
                         </div>
