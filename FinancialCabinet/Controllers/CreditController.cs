@@ -3,6 +3,7 @@ using FinancialCabinet.Data;
 using FinancialCabinet.Entity;
 using FinancialCabinet.Models;
 using FinancialCabinet.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -29,6 +30,7 @@ namespace FinancialCabinet.Controllers
             this.context = context;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index(int? sortingType, string currencyParam, double? minAmount, double? maxAmount, int? periodFrom, int? periodTo, double? maxPercent)
         {
             List<CreditModel> creditModelList;
@@ -40,7 +42,9 @@ namespace FinancialCabinet.Controllers
                 { "maxAmount", maxAmount },
                 { "periodFrom", periodFrom },
                 { "periodTo", periodTo },
-                { "maxPercent", maxPercent } });
+                { "maxPercent", maxPercent },
+                { "isForBusiness", User.IsInRole("Business")}
+            });
             //}
             //else
             //    creditModelList = await creditService.GetAllAsync();
@@ -58,6 +62,19 @@ namespace FinancialCabinet.Controllers
             await bankService.DeleteAllAsync();
             await bankService.InsertManyAsync(bankModelList);
             return Content("complete");
+        }
+
+
+        [Authorize(Roles="Individual")]
+        public async Task<IActionResult> TestInd()
+        {
+            return Content("Success individual!");
+        }
+
+        [Authorize(Roles="Business")]
+        public async Task<IActionResult> TestBsn()
+        {
+            return Content("Success individual!");
         }
     }
 }

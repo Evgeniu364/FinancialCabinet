@@ -9,6 +9,8 @@ namespace FinancialCabinet.Interface
     {
         public Guid ID { get; set; }
         public Guid BankId { get; set; }
+        public bool IsForBusiness { get; set; }
         public string CreditName { get; set; }
+        public string CreditDescription { get; set; }
     }
 }

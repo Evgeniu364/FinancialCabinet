@@ -11,5 +11,6 @@ namespace FinancialCabinet.Interface
         public Guid ID { get; set; }
         public Guid BankID { get; set; }
         public string DepositName { get; set; }
+        public bool IsForBusiness { get; set; }
     }
 }

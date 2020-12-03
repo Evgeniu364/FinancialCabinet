@@ -167,11 +167,15 @@ namespace FinancialCabinet.Service
                     deposit.SingleDepositList.Add(singleDeposit);
 
                 }
+
                 Console.WriteLine("Deposit: " + depositName);
                 deposit.DepositName = depositName;
                 depositList.Add(deposit);
             }
             depositsDocument.Dispose();
+            depositList.ForEach(dep => dep.IsForBusiness = false);
+            List<int> values = Enumerable.Range(0, depositList.Count).OrderBy(i => Guid.NewGuid()).Take(depositList.Count / 3).ToList();
+            values.ForEach(val => depositList[val].IsForBusiness = true);
             return depositList;
         }
 
@@ -211,6 +215,7 @@ namespace FinancialCabinet.Service
                 string creditName = "";
                 bool isGuarantorNeeded = true;
                 bool isIncomeCertificationNeeded = true;
+                string creditDescription = "";
                 if (isNewGroup)
                 {
 
@@ -252,7 +257,8 @@ namespace FinancialCabinet.Service
                         creditPercent.MinPercent = double.Parse(percentString.Split("до")[0].Replace("от", "").Replace("%", "").Trim(), CultureInfo.InvariantCulture);
                         creditPercent.MaxPercent = double.Parse(percentString.Split("до")[1].Replace("%", "").Trim(), CultureInfo.InvariantCulture);
                         creditPercent.IsInterval = true;
-                    } else
+                    }
+                    else
                     {
                         creditPercent.MaxPercent = double.Parse(percentString.Replace("до", "").Replace("%", "").Trim(), CultureInfo.InvariantCulture);
                         creditPercent.IsInterval = false;
@@ -263,7 +269,8 @@ namespace FinancialCabinet.Service
                     try
                     {
                         creditPercent.MaxPercent = double.Parse(percentString.Replace("%", "").Trim(), CultureInfo.InvariantCulture);
-                    } catch (Exception)
+                    }
+                    catch (Exception)
                     {
                         creditPercent.MaxPercent = 0;
                     }
@@ -280,6 +287,12 @@ namespace FinancialCabinet.Service
                             isIncomeCertificationNeeded = element.InnerHtml.Contains("Нет");
 
                     });
+                    IElement creditDescriptionElement = creditDetails.QuerySelectorAll("tr").ToList().Where(element => element.InnerHtml.Contains("Краткая информация", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                    if (creditDescriptionElement != null)
+                    {
+                        creditDescription = creditDescriptionElement.QuerySelectorAll("td")[1].TextContent;
+                    }
+                    //Console.WriteLine(creditDescription);
                 }
                 if (isNewGroup)
                 {
@@ -300,13 +313,15 @@ namespace FinancialCabinet.Service
                         isFirstCredit = false;
                     }
                     credit.SingleCreditList.Add(singleCredit);
+                    credit.CreditDescription = creditDescription;
                     singleCredit.IsGuarantorNeeded = isGuarantorNeeded;
                     singleCredit.IsIncomeCertificationNeeded = isIncomeCertificationNeeded;
                     singleCredit.MinSum = minSum;
                     singleCredit.MaxSum = maxSum;
                     singleCredit.Period = creditPeriod;
                     singleCredit.Percent = creditPercent;
-                } else
+                }
+                else
                 {
                     singleCredit.IsGuarantorNeeded = credit.SingleCreditList.First().IsGuarantorNeeded;
                     singleCredit.IsIncomeCertificationNeeded = credit.SingleCreditList.First().IsIncomeCertificationNeeded;
@@ -314,6 +329,7 @@ namespace FinancialCabinet.Service
                     singleCredit.MaxSum = maxSum;
                     singleCredit.Period = creditPeriod;
                     singleCredit.Percent = creditPercent;
+                    credit.CreditDescription = creditDescription;
                     credit.SingleCreditList.Add(singleCredit);
                 }
                 //lastCreditName = creditInfoElement[0].QuerySelector("a").InnerHtml;
@@ -336,8 +352,10 @@ namespace FinancialCabinet.Service
                 //Console.WriteLine("Нужен поручитель: " + isGuarantorNeeded.ToString());
                 //Console.WriteLine("Нужны справки: " + isIncomeCertificationNeeded.ToString());
             }
-            Console.WriteLine("Credit: " + credit.CreditName);
+            //Console.WriteLine("Credit: " + credit.CreditName);
             creditList.Add(credit);
+            creditList.ForEach(c => c.IsForBusiness = false);
+            creditList.Where(c => c.CreditName.Contains("бизнес", StringComparison.OrdinalIgnoreCase)).ToList().ForEach(c => c.IsForBusiness = true);
             return creditList;
         }
     }

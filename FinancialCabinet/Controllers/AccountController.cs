@@ -16,11 +16,14 @@ namespace FinancialCabinet.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<Role> _roleManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
+            InitializeRoles();
         }
 
         [HttpGet]
@@ -36,6 +39,7 @@ namespace FinancialCabinet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
+
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
@@ -62,6 +66,12 @@ namespace FinancialCabinet.Controllers
                     EmailConfirmed = true };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (model.IsIndividual)
+                    await _userManager.AddToRoleAsync(user, "Individual");
+                else
+                    await _userManager.AddToRoleAsync(user, "Business");
+
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
@@ -148,6 +158,19 @@ namespace FinancialCabinet.Controllers
         }
 
         #endregion
+
+        private void InitializeRoles()
+        {
+            if(!_roleManager.RoleExistsAsync("Individual").Result)
+            {
+                _roleManager.CreateAsync(new Role { Name = "Individual" });
+            }
+
+            if (!_roleManager.RoleExistsAsync("Business").Result)
+            {
+                _roleManager.CreateAsync(new Role { Name = "Business" });
+            }
+        }
 
     }
 }

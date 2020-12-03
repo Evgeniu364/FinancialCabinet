@@ -40,6 +40,12 @@ namespace FinancialCabinet.Service
             int? periodFrom = (int?) sortParams["periodFrom"];
             int? periodTo = (int?) sortParams["periodTo"];
             double? maxPercent = (double?) sortParams["maxPercent"];
+            bool? isForBusiness = (bool?) sortParams["isForBusiness"];
+
+            if (isForBusiness.HasValue)
+            {
+                modelList = modelList.Where(model => model.IsForBusiness == isForBusiness).ToList();
+            }
             if (!string.IsNullOrEmpty(currencyParam))
             {
                 modelList.ForEach(model => model.SingleCreditList = model.SingleCreditList.Where(singleCredit => singleCredit.Currency == currencyParam).ToList());

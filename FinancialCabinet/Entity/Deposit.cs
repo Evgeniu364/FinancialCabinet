@@ -13,6 +13,7 @@ namespace FinancialCabinet.Entity
         public Guid BankID { get; set; }
         public Bank Bank { get; set; }
         public string DepositName { get; set; }
+        public bool IsForBusiness { get; set; }
         public List<SingleDeposit> SingleDepositList { get; set; }
     }
 }
