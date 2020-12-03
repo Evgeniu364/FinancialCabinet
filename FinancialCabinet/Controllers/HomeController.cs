@@ -25,12 +25,12 @@ namespace FinancialCabinet.Controllers
         {
             return View(await this.bankService.GetAllAsync());
         }
-
+        /*
         public IActionResult Privacy()
         {
             return View();
         }
-
+        */
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
