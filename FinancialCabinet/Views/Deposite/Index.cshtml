@@ -88,9 +88,20 @@
         <button id="openSearch" style="width: 100%;" class="button-credit">
             Поиск
         </button>
+        <button id="compareDeposits" style="width: 100%;" class="button-credit">
+            Сравнить вклады
+        </button>
+        <div style="display: inline;">
+            <button id="compareInput" style="width: 100%; display:none" class="btn-success" onclick="showSelected()">
+                Сравнить
+            </button>
+            <button id="cancelCompare" style="width: 100%; display:none" class="btn-danger" onclick="cancelCompare()">
+                Отмена
+            </button>
+        </div>
     </div>
     <div>
-        <table class="table sticky-table">
+        <table class="table sticky-table" name="tableDeposite">
             <thead>
             <tr>
                 <th class="th-header">
@@ -147,30 +158,68 @@
                 </tr>
                 @if (deposit.SingleDepositList.Count > 1)
                 {
-                    @foreach (SingleDepositModel singleDeposite in deposit.SingleDepositList.Skip(1))
+                    i++;
+                    <tr class="table-row">
+                        <th rowspan="@deposit.SingleDepositList.Count" style="vertical-align: middle;">
+                            @i
+                        </th>
+                        <td rowspan="@deposit.SingleDepositList.Count" style="vertical-align: middle;">
+                            @deposit.DepositName
+                        </td>
+                        <td>
+                            @deposit.SingleDepositList.First().Currency
+                        </td>
+                        @if (deposit.SingleDepositList.First().Period.IsInterval)
+                        {
+                            string minPType = deposit.SingleDepositList.First().Period.MinPeriodType == 0 ? "дн." : "мес.";
+                            string maxPType = deposit.SingleDepositList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                            <td style="width: 10%">От @deposit.SingleDepositList.First().Period.MinPeriod.Value @minPType До @deposit.SingleDepositList.First().Period.MaxPeriod @maxPType</td>
+                        }
+                        else
+                        {
+                            string maxPType = deposit.SingleDepositList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                            <td style="width: 10%">До @deposit.SingleDepositList.First().Period.MaxPeriod @maxPType</td>
+                        }
+                        @if (deposit.SingleDepositList.First().Percent.MaxPercent == 0)
+                        {
+                            <td>-</td>
+                        }
+                        else
+                        {
+                            <td>@deposit.SingleDepositList.First().Percent.MaxPercent%</td>
+                        }
+                        <td id="checkboxCompare" style="display:none" name="@i"><input type="checkbox" /></td>
+                    </tr>
+                    @if (deposit.SingleDepositList.Count > 1)
                     {
-                        <tr class="table-row">
-                            <td>@singleDeposite.Currency</td>
-                            @if (singleDeposite.Period.IsInterval)
-                            {
-                                string minPType = singleDeposite.Period.MinPeriodType == 0 ? "дн." : "мес.";
-                                string maxPType = singleDeposite.Period.MaxPeriodType == 0 ? "дн." : "мес.";
-                                <td style="width: 10%">От @singleDeposite.Period.MinPeriod.Value @minPType До @singleDeposite.Period.MaxPeriod @maxPType</td>
-                            }
-                            else
-                            {
-                                string maxPType = singleDeposite.Period.MaxPeriodType == 0 ? "дн." : "мес.";
-                                <td style="width: 10%">До @singleDeposite.Period.MaxPeriod @maxPType</td>
-                            }
-                            @if (singleDeposite.Percent.MaxPercent == 0)
-                            {
-                                <td>-</td>
-                            }
-                            else
-                            {
-                                <td>@singleDeposite.Percent.MaxPercent%</td>
-                            }
-                        </tr>
+                        int j = 0;
+                        @foreach (SingleDepositModel singleDeposite in deposit.SingleDepositList.Skip(1))
+                        {
+                            j++;
+                            <tr class="table-row">
+                                <td>@singleDeposite.Currency</td>
+                                @if (singleDeposite.Period.IsInterval)
+                                {
+                                    string minPType = singleDeposite.Period.MinPeriodType == 0 ? "дн." : "мес.";
+                                    string maxPType = singleDeposite.Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                                    <td style="width: 10%">От @singleDeposite.Period.MinPeriod.Value @minPType До @singleDeposite.Period.MaxPeriod @maxPType</td>
+                                }
+                                else
+                                {
+                                    string maxPType = singleDeposite.Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                                    <td style="width: 10%">До @singleDeposite.Period.MaxPeriod @maxPType</td>
+                                }
+                                @if (singleDeposite.Percent.MaxPercent == 0)
+                                {
+                                    <td>-</td>
+                                }
+                                else
+                                {
+                                    <td>@singleDeposite.Percent.MaxPercent%</td>
+                                }
+                                <td id="checkboxCompare" style="display:none" name="@i-@j"><input type="checkbox" /></td>
+                            </tr>
+                        }
                     }
                 }
             }
@@ -192,5 +241,49 @@
                 }
             })
         });
+
+        $(document).ready(function () {
+            $("#compareDeposits").click(function () {
+                if (document.getElementById("checkboxCompare").style.display == 'none') {
+                    $('*[id*=checkboxCompare]').each(function () {
+                        $(this).fadeIn();
+                    });
+                    document.getElementById("compareInput").style.display = 'block';
+                    document.getElementById("compareDeposits").style.display = 'none';
+                    document.getElementById("cancelCompare").style.display = 'block';
+                } else {
+                    $('*[id*=checkboxCompare]').each(function () {
+                        $(this).fadeOut()
+                    });
+                    document.getElementById("compareInput").style.display = 'none';
+                    document.getElementById("compareDeposits").style.display = 'block';
+                    document.getElementById("cancelCompare").style.display = 'none';
+                }
+            })
+        });
+
+        function showSelected() {
+            $('table input[type=checkbox]').each(function () {
+                if (!$(this).prop('checked')) {
+                    $(this).parent().parent().fadeOut();
+                }
+            });
+            document.getElementById("compareInput").style.display = 'none';
+            document.getElementById("compareDeposits").style.display = 'block';
+        }
+
+        function cancelCompare() {
+            $('table input[type=checkbox]').each(function () {
+                $(this).parent().parent().fadeIn();
+            });
+            document.getElementById("compareInput").style.display = 'none';
+            document.getElementById("cancelCompare").style.display = 'none';
+            document.getElementById("compareDeposits").style.display = 'block';
+
+            $('*[id*=checkboxCompare]').each(function () {
+                $(this).fadeOut();
+                $(this).prop('checked', false);
+            });
+        }
     </script>
 </div>
