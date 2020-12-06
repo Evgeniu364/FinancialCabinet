@@ -22,7 +22,11 @@ namespace FinancialCabinet.Service
 
         public override async Task<CreditModel> GetAsync(Guid ID)
         {
-            Credit credit = await context.Credits.Include(e => e.Bank).FirstOrDefaultAsync(e => e.ID == ID);
+            Credit credit = await context.Credits.Include(e => e.Bank)
+                .Include(e => e.SingleCreditList)
+                .ThenInclude(e => e.Percent)
+                .Include(e => e.SingleCreditList)
+                .ThenInclude(e => e.Period).FirstOrDefaultAsync(e => e.ID == ID);
             if (credit == null)
                 return null;
             return mapper.Map<CreditModel>(credit);

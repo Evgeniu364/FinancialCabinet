@@ -1,20 +1,107 @@
 ﻿@model CreditModel
 
+<div>
     <div>
-        <h1>@Model.CreditName</h1>
+        <h1 style="text-align: center;">@Model.CreditName</h1>
         @if (!string.IsNullOrEmpty(Model.Bank.Email))
         {
-            <h3 style="padding-left: 1em;">От банка "<a href="mailto:@{@Model.Bank.Email}">@Model.Bank.Name"</a></h3>
+            <h3 style="padding-left: 1em; text-align: center;">От банка "<a href="mailto:@{@Model.Bank.Email}">@Model.Bank.Name"</a></h3>
         }
         else
         {
-            <h3 style="padding-left: 1em;">От банка "@Model.Bank.Name"</h3>
+            <h3 style="padding-left: 1em; text-align: center;">От банка "@Model.Bank.Name"</h3>
         }
     </div>
-<div>
-    <p>
+
+    <p align="justify">
         @Model.CreditDescription
     </p>
+
+    <div style="display: flex; justify-content: center; background-color: #E7E7E7; border-radius: 20px; border: 1px solid black; margin-top: 5%;">
+        <div style="display: flex; flex-direction: row; width: 80%;">
+            <div style="display: flex; flex-direction:column; margin-right: 10px; flex: 5 0;">
+                <div>
+                    Минимальная сумма:
+                </div>
+                <div>
+                    Максимальная сумма:
+                </div>
+                <div>
+                    Поручитель не требуется:
+                </div>
+                <div>
+                    Справка о доходах не требуется:
+                </div>
+                <div>
+                    Валюта:
+                </div>
+                <div>
+                    Стаква:
+                </div>
+                <div>
+                    Срок:
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; flex: 2 0">
+                <div>
+                    @Model.SingleCreditList.First().MinSum
+                </div>
+                <div>
+                    @Model.SingleCreditList.First().MaxSum
+                </div>
+                @if (Model.SingleCreditList.First().IsGuarantorNeeded)
+                {
+                    <div>
+                        ❌
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        ✔️
+                    </div>
+                }
+                @if (Model.SingleCreditList.First().IsIncomeCertificationNeeded)
+                {
+                    <div>
+                        ❌
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        ✔️
+                    </div>
+                }
+                <div>
+                    @Model.SingleCreditList.First().Currency
+                </div>
+                @if (Model.SingleCreditList.First().Percent.MaxPercent == 0)
+                {
+                    <div>
+                        -
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        @Model.SingleCreditList.First().Percent.MaxPercent%
+                    </div>
+                }
+                <div>
+                    @if (Model.SingleCreditList.First().Period.IsInterval)
+                    {
+                        string minPType = Model.SingleCreditList.First().Period.MinPeriodType == 0 ? "дн." : "мес.";
+                        string maxPType = Model.SingleCreditList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                        <div>От @Model.SingleCreditList.First().Period.MinPeriod.Value @minPType До @Model.SingleCreditList.First().Period.MaxPeriod @maxPType</div>
+                    }
+                    else
+                    {
+                        string maxPType = Model.SingleCreditList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                        <div>До @Model.SingleCreditList.First().Period.MaxPeriod @maxPType</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-
