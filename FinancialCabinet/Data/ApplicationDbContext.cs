@@ -28,6 +28,7 @@ namespace FinancialCabinet.Data
         {
             EntityTypeBuilder<User> User = builder.Entity<User>();
             User.HasMany(e => e.LikeDepositList).WithOne(e => e.User);
+            User.HasMany(e => e.LikeCreditList).WithOne(e => e.User);
             User.HasOne(e => e.Individual).WithOne(e => e.User).HasForeignKey<Individual>(e => e.UserID);
             User.HasOne(e => e.LegalEntity).WithOne(e => e.User).HasForeignKey<LegalEntity>(e => e.UserID);
 
@@ -72,6 +73,7 @@ namespace FinancialCabinet.Data
             EntityTypeBuilder<LikeDeposit> LikeDeposit = builder.Entity<LikeDeposit>();
             LikeDeposit.ToTable("LikeDeposit");
             LikeDeposit.HasOne(e => e.SingleDeposit).WithMany(e => e.LikeDepositList);
+            LikeDeposit.HasOne(e => e.User).WithMany(e => e.LikeDepositList);
 
             EntityTypeBuilder<Phone> Phone = builder.Entity<Phone>();
             Phone.ToTable("Phone");
@@ -94,6 +96,7 @@ namespace FinancialCabinet.Data
             EntityTypeBuilder<LikeCredit> LikeCredit = builder.Entity<LikeCredit>();
             LikeCredit.ToTable("LikeCredit");
             LikeCredit.HasOne(e => e.SingleCredit).WithMany(e => e.LikeCreditList);
+            LikeCredit.HasOne(e => e.User).WithMany(e => e.LikeCreditList);
 
             base.OnModelCreating(builder);
         }

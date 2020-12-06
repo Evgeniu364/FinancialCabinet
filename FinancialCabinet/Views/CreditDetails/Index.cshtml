@@ -1,0 +1,20 @@
+﻿@model CreditModel
+
+    <div>
+        <h1>@Model.CreditName</h1>
+        @if (!string.IsNullOrEmpty(Model.Bank.Email))
+        {
+            <h3 style="padding-left: 1em;">От банка "<a href="mailto:@{@Model.Bank.Email}">@Model.Bank.Name"</a></h3>
+        }
+        else
+        {
+            <h3 style="padding-left: 1em;">От банка "@Model.Bank.Name"</h3>
+        }
+    </div>
+<div>
+    <p>
+        @Model.CreditDescription
+    </p>
+</div>
+
+
