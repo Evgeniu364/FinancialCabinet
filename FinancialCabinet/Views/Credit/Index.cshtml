@@ -93,6 +93,17 @@
         <button id="openSearch" style="width: 100%;" class="button-credit">
             Поиск
         </button>
+        <button id="compareDeposits" style="width: 100%;" class="button-credit">
+            Сравнить вклады
+        </button>
+        <div style="display: inline;">
+            <button id="compareInput" style="width: 100%; display:none" class="btn-success" onclick="showSelected()">
+                Сравнить
+            </button>
+            <button id="cancelCompare" style="width: 100%; display:none" class="btn-danger" onclick="cancelCompare()">
+                Отмена
+            </button>
+        </div>
     </div>
     <div>
         <table class="table sticky-table">
@@ -170,11 +181,14 @@
                         {
                             <td>@credit.SingleCreditList.First().Percent.MaxPercent%</td>
                         }
+                        <td id="checkboxCompare" style="display:none" name="@i"><input type="checkbox" /></td>
                     </tr>
                     @if (credit.SingleCreditList.Count > 1)
                     {
+                        int j = 0;
                         @foreach (SingleCreditModel singleCredit in credit.SingleCreditList.Skip(1))
                         {
+                            j++;
                             <tr class="table-row">
                                 <td>@singleCredit.Currency</td>
                                 <td>@singleCredit.MinSum</td>
@@ -205,6 +219,7 @@
                                 {
                                     <td>@singleCredit.Percent.MaxPercent%</td>
                                 }
+                                <td id="checkboxCompare" style="display:none" name="@i-@j"><input type="checkbox" /></td>
                             </tr>
                         }
                     }
@@ -227,5 +242,49 @@
                 }
             })
         });
+
+        $(document).ready(function () {
+            $("#compareDeposits").click(function () {
+                if (document.getElementById("checkboxCompare").style.display == 'none') {
+                    $('*[id*=checkboxCompare]').each(function () {
+                        $(this).fadeIn();
+                    });
+                    document.getElementById("compareInput").style.display = 'block';
+                    document.getElementById("compareDeposits").style.display = 'none';
+                    document.getElementById("cancelCompare").style.display = 'block';
+                } else {
+                    $('*[id*=checkboxCompare]').each(function () {
+                        $(this).fadeOut()
+                    });
+                    document.getElementById("compareInput").style.display = 'none';
+                    document.getElementById("compareDeposits").style.display = 'block';
+                    document.getElementById("cancelCompare").style.display = 'none';
+                }
+            })
+        });
+
+        function showSelected() {
+            $('table input[type=checkbox]').each(function () {
+                if (!$(this).prop('checked')) {
+                    $(this).parent().parent().fadeOut();
+                }
+            });
+            document.getElementById("compareInput").style.display = 'none';
+            document.getElementById("compareDeposits").style.display = 'block';
+        }
+
+        function cancelCompare() {
+            $('table input[type=checkbox]').each(function () {
+                $(this).parent().parent().fadeIn();
+            });
+            document.getElementById("compareInput").style.display = 'none';
+            document.getElementById("cancelCompare").style.display = 'none';
+            document.getElementById("compareDeposits").style.display = 'block';
+
+            $('*[id*=checkboxCompare]').each(function () {
+                $(this).fadeOut();
+                $(this).prop('checked', false);
+            });
+        }
     </script>
 </div>
