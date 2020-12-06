@@ -12,6 +12,7 @@ namespace FinancialCabinet.Entity
         public string Address { get; set; }
         public int GroupNumber { get; set; }
         public List<LikeDeposit> LikeDepositList { get; set; } 
+        public List<LikeCredit> LikeCreditList { get; set; } 
         public Individual Individual { get; set; }
         public LegalEntity LegalEntity { get; set; }
         

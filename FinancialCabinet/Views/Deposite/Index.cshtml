@@ -26,6 +26,9 @@
                         <div class="filter-text">
                             Процентная ставка до:
                         </div>
+                        <div class="filter-text">
+                            Мои рекомендации:
+                        </div>
                     </div>
                     <div>
                         <div>
@@ -67,14 +70,17 @@
                             </select>
                         </div>
                         <div>
-                            <input type="number" maxlength="10" name="periodTo" class="filter-input" />
+                            <input type="number" maxlength="10" name="periodTo" class="filter-input"/>
                         </div>
                         <div>
-                            <input type="number" step="0.01" name="maxPercent" class="filter-input" />
+                            <input type="number" step="0.01" name="maxPercent" class="filter-input"/>
+                        </div>
+                        <div>
+                            <input type="checkbox" name="isRecomendation" value="true" class="filter-input"/>
                         </div>
                     </div>
                 </div>
-                <input type="submit" value="Применить" class="filter-input button-credit" />
+                <input type="submit" value="Применить" class="filter-input button-credit"/>
             </div>
         </form>
     </div>
@@ -97,27 +103,60 @@
     <div>
         <table class="table sticky-table" name="tableDeposite">
             <thead>
-                <tr>
-                    <th class="th-header">
-                        #
-                    </th>
-                    <th class="th-header">
-                        Название
-                    </th>
-                    <th class="th-header">
-                        Валюта
-                    </th>
-                    <th class="th-header">
-                        Срок
-                    </th>
-                    <th class="th-header">
-                        Ставка
-                    </th>
-                </tr>
+            <tr>
+                <th class="th-header">
+                    #
+                </th>
+                <th class="th-header">
+                    Название
+                </th>
+                <th class="th-header">
+                    Валюта
+                </th>
+                <th class="th-header">
+                    Срок
+                </th>
+                <th class="th-header">
+                    Ставка
+                </th>
+            </tr>
             </thead>
             <tbody>
-                @{int i = 0;}
-                @foreach (DepositModel deposit in Model)
+            @{int i = 0;}
+            @foreach (DepositModel deposit in Model)
+            {
+                i++;
+                <tr class="table-row">
+                    <th rowspan="@deposit.SingleDepositList.Count" style="vertical-align: middle;">
+                        @i
+                    </th>
+                    <td rowspan="@deposit.SingleDepositList.Count" style="vertical-align: middle;">
+                        @deposit.DepositName
+                    </td>
+                    <td>
+                        @deposit.SingleDepositList.First().Currency
+                    </td>
+                    @if (deposit.SingleDepositList.First().Period.IsInterval)
+                    {
+                        string minPType = deposit.SingleDepositList.First().Period.MinPeriodType == 0 ? "дн." : "мес.";
+                        string maxPType = deposit.SingleDepositList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                        <td style="width: 10%">От @deposit.SingleDepositList.First().Period.MinPeriod.Value @minPType До @deposit.SingleDepositList.First().Period.MaxPeriod @maxPType</td>
+                    }
+                    else
+                    {
+                        string maxPType = deposit.SingleDepositList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                        <td style="width: 10%">До @deposit.SingleDepositList.First().Period.MaxPeriod @maxPType</td>
+                    }
+                    @if (deposit.SingleDepositList.First().Percent.MaxPercent == 0)
+                    {
+                        <td>-</td>
+                    }
+                    else
+                    {
+                        <td>@deposit.SingleDepositList.First().Percent.MaxPercent%</td>
+                    }
+                </tr>
+                @if (deposit.SingleDepositList.Count > 1)
                 {
                     i++;
                     <tr class="table-row">
@@ -183,6 +222,7 @@
                         }
                     }
                 }
+            }
             </tbody>
         </table>
     </div>

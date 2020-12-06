@@ -14,6 +14,8 @@
     <Compile Remove="Migrations\20201117101356_test.Designer.cs" />
     <Compile Remove="Migrations\20201117103824_AddCascadeDelete.cs" />
     <Compile Remove="Migrations\20201117103824_AddCascadeDelete.Designer.cs" />
+    <Compile Remove="Migrations\20201203184421_AddLikeCredit.cs" />
+    <Compile Remove="Migrations\20201203184421_AddLikeCredit.Designer.cs" />
   </ItemGroup>
 
 

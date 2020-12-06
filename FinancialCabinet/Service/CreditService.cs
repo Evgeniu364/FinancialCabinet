@@ -20,6 +20,14 @@ namespace FinancialCabinet.Service
             this.mapper = mapper;
         }
 
+        public override async Task<CreditModel> GetAsync(Guid ID)
+        {
+            Credit credit = await context.Credits.Include(e => e.Bank).FirstOrDefaultAsync(e => e.ID == ID);
+            if (credit == null)
+                return null;
+            return mapper.Map<CreditModel>(credit);
+        }
+
         public override async Task<List<CreditModel>> GetAllAsync()
         {
             List<Credit> entityList = await context.Credits.Include(e => e.SingleCreditList)
@@ -70,7 +78,7 @@ namespace FinancialCabinet.Service
             {
                 modelList.ForEach(model => model.SingleCreditList = model.SingleCreditList.Where(singleCredit => singleCredit.Percent.MaxPercent <= maxPercent.Value).ToList());
             }
-            modelList = modelList.Where(model => model.SingleCreditList.Count > 0).Take(30).ToList();
+            modelList = modelList.Where(model => model.SingleCreditList.Count > 0).ToList();
             if (sortType.HasValue)
             {
                 switch (sortType.Value)

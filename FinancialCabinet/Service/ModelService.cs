@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FinancialCabinet.Service
 {
-    public class ModelService<TEntity, TModel, TContext, TMapper> where TEntity: class where TModel: class where TContext: ApplicationDbContext where TMapper: IMapper
+    public class ModelService<TEntity, TModel, TContext, TMapper> where TEntity : class where TModel : class where TContext : ApplicationDbContext where TMapper : IMapper
     {
 
         private readonly TContext context;
@@ -24,6 +24,8 @@ namespace FinancialCabinet.Service
         public virtual async Task<TModel> GetAsync(Guid ID)
         {
             TEntity entity = await context.FindAsync<TEntity>(ID);
+            if (entity == null)
+                return null;
             TModel model = mapper.Map<TModel>(entity);
 
             return model;

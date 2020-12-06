@@ -14,6 +14,7 @@ namespace FinancialCabinet.Models
         public string Phone { get; set; }
         public string Address { get; set; }
         public List<LikeDeposit> LikeDepositList { get; set; }
+        public List<LikeCredit> LikeCreditList { get; set; }
         public Individual Individual { get; set; }
         public LegalEntity LegalEntity { get; set; }
 
