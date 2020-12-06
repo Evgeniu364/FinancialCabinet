@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace FinancialCabinet.Controllers
 {
@@ -21,21 +22,29 @@ namespace FinancialCabinet.Controllers
         private readonly CreditService creditService;
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
-        public CreditController(ParserService parserService, BankService bankService, IMapper mapper, ApplicationDbContext context, CreditService creditService)
+        private readonly RecomendationSystem _recomendation;
+        private readonly UserManager<User> _userManager;
+        public CreditController(ParserService parserService, BankService bankService, IMapper mapper, ApplicationDbContext context, CreditService creditService, RecomendationSystem recomendation, UserManager<User> userManager)
         {
             this.parserService = parserService;
             this.bankService = bankService;
             this.creditService = creditService;
             this.mapper = mapper;
             this.context = context;
+            this._recomendation = recomendation;
+            this._userManager = userManager;
         }
 
         [Authorize]
-        public async Task<IActionResult> Index(int? sortingType, string currencyParam, double? minAmount, double? maxAmount, int? periodFrom, int? periodTo, double? maxPercent)
+        public async Task<IActionResult> Index(int? sortingType, string currencyParam, double? minAmount, double? maxAmount, int? periodFrom, int? periodTo, double? maxPercent, bool? isRecomendation)
         {
             List<CreditModel> creditModelList;
             //if (sortingType.HasValue)
             //{
+            if (isRecomendation.HasValue && isRecomendation.Value)
+            {
+                return View( await _recomendation.GetRecomendationCredits(_userManager.GetUserAsync(HttpContext.User).Result.Id));
+            }
             creditModelList = await creditService.GetAllAsync(new Dictionary<string, object>() { { "sortingType", sortingType },
                 { "currencyParam", currencyParam },
                 { "minAmount", minAmount },
@@ -76,5 +85,6 @@ namespace FinancialCabinet.Controllers
         {
             return Content("Success individual!");
         }
+        
     }
 }
