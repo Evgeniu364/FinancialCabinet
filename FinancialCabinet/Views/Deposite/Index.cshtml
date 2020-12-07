@@ -156,40 +156,6 @@
                         <td>@deposit.SingleDepositList.First().Percent.MaxPercent%</td>
                     }
                 </tr>
-                @if (deposit.SingleDepositList.Count > 1)
-                {
-                    i++;
-                    <tr class="table-row">
-                        <th rowspan="@deposit.SingleDepositList.Count" style="vertical-align: middle;">
-                            @i
-                        </th>
-                        <td rowspan="@deposit.SingleDepositList.Count" style="vertical-align: middle;">
-                            @deposit.DepositName
-                        </td>
-                        <td>
-                            @deposit.SingleDepositList.First().Currency
-                        </td>
-                        @if (deposit.SingleDepositList.First().Period.IsInterval)
-                        {
-                            string minPType = deposit.SingleDepositList.First().Period.MinPeriodType == 0 ? "дн." : "мес.";
-                            string maxPType = deposit.SingleDepositList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
-                            <td style="width: 10%">От @deposit.SingleDepositList.First().Period.MinPeriod.Value @minPType До @deposit.SingleDepositList.First().Period.MaxPeriod @maxPType</td>
-                        }
-                        else
-                        {
-                            string maxPType = deposit.SingleDepositList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
-                            <td style="width: 10%">До @deposit.SingleDepositList.First().Period.MaxPeriod @maxPType</td>
-                        }
-                        @if (deposit.SingleDepositList.First().Percent.MaxPercent == 0)
-                        {
-                            <td>-</td>
-                        }
-                        else
-                        {
-                            <td>@deposit.SingleDepositList.First().Percent.MaxPercent%</td>
-                        }
-                        <td id="checkboxCompare" style="display:none" name="@i"><input type="checkbox" /></td>
-                    </tr>
                     @if (deposit.SingleDepositList.Count > 1)
                     {
                         int j = 0;
@@ -220,7 +186,6 @@
                                 <td id="checkboxCompare" style="display:none" name="@i-@j"><input type="checkbox" /></td>
                             </tr>
                         }
-                    }
                 }
             }
             </tbody>
