@@ -1,4 +1,5 @@
 ﻿using FinancialCabinet.Entity;
+using FinancialCabinet.Service;
 using FinancialCabinet.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -67,20 +68,52 @@ namespace FinancialCabinet.Controllers
 
                 var result = await _userManager.CreateAsync(user, model.Password);
 
-                if (model.IsIndividual)
-                    await _userManager.AddToRoleAsync(user, "Individual");
-                else
-                    await _userManager.AddToRoleAsync(user, "Business");
+                //if (model.IsIndividual)
+                //    await _userManager.AddToRoleAsync(user, "Individual");
+                //else
+                //    await _userManager.AddToRoleAsync(user, "Business");
 
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToLocal(returnUrl);
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.Action(
+                        "ConfirmEmail",
+                        "Account",
+                        new { userId = user.Id, code = code },
+                        protocol: HttpContext.Request.Scheme);
+                    EmailService emailService = new EmailService();
+                    await emailService.SendEmailAsync(model.Email, "Confirm your account",
+                        $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
+
+                    return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
                 }
                 AddErrors(result);
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            }
+            else
+                return View("Error");
         }
 
         [HttpGet]
