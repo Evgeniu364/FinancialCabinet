@@ -10,12 +10,10 @@
     ViewData["Title"] = "Вход";
 }
 <h2>@ViewData["Title"]</h2>
-<div class="row">
-    <div class="col-md-4">
+<div class="row" class="col-md-3">
+    <div>
         <section>
             <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-                <h4>Используйте локальную учетную запись для входа в систему.</h4>
-                <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Email"></label>
@@ -36,7 +34,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default">Вход</button>
+                    <button type="submit" class="btn btn-primary">Вход</button>
                 </div>
                 <div class="form-group">
                     <p>
@@ -47,37 +45,6 @@
                     </p>
                 </div>
             </form>
-        </section>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h4>Используйте другой сервис для входа.</h4>
-            <hr />
-            @{
-                var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-                if (loginProviders.Count == 0)
-                {
-                    <div>
-                        <p>
-                            Не настроены внешние службы аутентификации. Увидеть <a href="https://go.microsoft.com/fwlink/?LinkID=532715">эту статья</a>
-                            для получения дополнительных сведений о настройке этого приложения ASP.NET для поддержки входа в систему через внешние службы.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in loginProviders)
-                                {
-                                    <button type="submit" class="btn btn-default" name="provider" value="@provider.Name" title="Войдите, используя ваш @provider.DisplayName аккаунт">@provider.Name</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
         </section>
     </div>
 </div>
