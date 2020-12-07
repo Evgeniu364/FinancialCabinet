@@ -51,33 +51,6 @@
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
-            <h4>Используйте другой сервис для входа.</h4>
-            <hr />
-            @{
-                var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-                if (loginProviders.Count == 0)
-                {
-                    <div>
-                        <p>
-                            Не настроены внешние службы аутентификации. Увидеть <a href="https://go.microsoft.com/fwlink/?LinkID=532715">эту статья</a>
-                            для получения дополнительных сведений о настройке этого приложения ASP.NET для поддержки входа в систему через внешние службы.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in loginProviders)
-                                {
-                                    <button type="submit" class="btn btn-default" name="provider" value="@provider.Name" title="Войдите, используя ваш @provider.DisplayName аккаунт">@provider.Name</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
         </section>
     </div>
 </div>

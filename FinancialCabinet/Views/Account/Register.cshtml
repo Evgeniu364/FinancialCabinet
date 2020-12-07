@@ -15,44 +15,44 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IsIndividual"></label>
+                <label>Физическое лицо</label>
                 <input type="checkbox" asp-for="IsIndividual" id="isIndividualCheckbox" onclick="showAdditionalFields()" class="form-check" />
                 <span asp-validation-for="IsIndividual" class="text-danger"></span>
             </div>
 
             <div id="individualFields" style="display: none">
                 <div class="form-group">
-                    <label asp-for="Name"></label>
+                    <label>Имя</label>
                     <input asp-for="Name" class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="LastName"></label>
+                    <label>Фамилия</label>
                     <input asp-for="LastName" class="form-control" />
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Patronymic"></label>
+                    <label>Отчество</label>
                     <input asp-for="Patronymic" class="form-control" />
                     <span asp-validation-for="Patronymic" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="DateOfBirth"></label>
+                    <label>Дата рождения</label>
                     <input asp-for="DateOfBirth" class="form-control" type="date" />
                     <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="TypeDocument"></label>
+                    <label>Тип документа</label>
                     <input asp-for="TypeDocument" class="form-control" />
                     <span asp-validation-for="TypeDocument" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="DocumentNumber"></label>
+                    <label>Номер документа</label>
                     <input asp-for="DocumentNumber" class="form-control" />
                     <span asp-validation-for="DocumentNumber" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Salary"></label>
+                    <label>Зарплата</label>
                     <input asp-for="Salary" class="form-control" />
                     <span asp-validation-for="Salary" class="text-danger"></span>
                 </div>
@@ -60,45 +60,45 @@
 
             <div id="legalFields">
                 <div class="form-group">
-                    <label asp-for="CompanyName"></label>
+                    <label>Имя компании</label>
                     <input asp-for="CompanyName" class="form-control" />
                     <span asp-validation-for="CompanyName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Unp"></label>
+                    <label>УНП</label>
                     <input asp-for="Unp" class="form-control" />
                     <span asp-validation-for="Unp" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="NumberDocument"></label>
+                    <label>Номер документа</label>
                     <input asp-for="NumberDocument" class="form-control" />
                     <span asp-validation-for="NumberDocument" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="CashTurnover"></label>
+                    <label>Денежный оборот</label>
                     <input asp-for="CashTurnover" class="form-control" />
                     <span asp-validation-for="CashTurnover" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label asp-for="Phone"></label>
+                <label>Мобильный номер</label>
                 <input asp-for="Phone" class="form-control" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Address"></label>
+                <label>Адрес</label>
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Password"></label>
+                <label>Пароль</label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ConfirmPassword"></label>
+                <label>Повторите пароль</label>
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
