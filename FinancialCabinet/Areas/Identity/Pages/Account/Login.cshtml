@@ -19,7 +19,8 @@
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Input.Password"></label>
+                    <!--<label asp-for="Input.Password"></label>-->
+                    <label>Пароль</label>
                     <input type="password" asp-for="Input.Password" class="form-control" />
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
@@ -32,7 +33,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Log in</button>
+                    <button type="submit" class="btn btn-primary">Войти</button>
                 </div>
                 <div class="form-group">
                     <p>
@@ -50,32 +51,6 @@
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
-            <h4>Используйте другой сервис для входа в систему.</h4>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            Не настроены внешние службы аутентификации. Увидеть <a href="https://go.microsoft.com/fwlink/?LinkID=532715"> эту статья</a>
-                            для получения дополнительных сведений о настройке этого приложения ASP.NET для поддержки входа в систему через внешние службы.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Войдите, используя свой @provider.DisplayName аккаунт">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
         </section>
     </div>
 </div>

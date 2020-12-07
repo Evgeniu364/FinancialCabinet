@@ -12,53 +12,53 @@
         <form id="profile-form" method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Username"></label>
+                <label>Имя пользователя</label>
                 <input asp-for="Username" class="form-control" disabled />
             </div>
             <div class="form-group">
-                <label asp-for="Input.Phone"></label>
+                <label>Мобильный телефон</label>
                 <input type="tel" asp-for="Input.Phone" class="form-control" />
                 <span asp-validation-for="Input.Phone" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Input.Address"></label>
+                <label>Адрес</label>
                 <input asp-for="Input.Address" class="form-control" />
                 <span asp-validation-for="Input.Address" class="text-danger"></span>
             </div>
             @if (Model.Input.IsIndividual)
             {
                 <div class="form-group">
-                    <label asp-for="Input.Name"></label>
+                    <label>Имя</label>
                     <input type="text" asp-for="Input.Name" class="form-control" />
                     <span asp-validation-for="Input.Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Input.LastName"></label>
+                    <label>Фамилия</label>
                     <input type="text" asp-for="Input.LastName" class="form-control" />
                     <span asp-validation-for="Input.LastName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Input.Patronymic"></label>
+                    <label>Отчество</label>
                     <input type="text" asp-for="Input.Patronymic" class="form-control" />
                     <span asp-validation-for="Input.Patronymic" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Input.DateOfBirth"></label>
+                    <label>Дата рождения</label>
                     <input asp-for="Input.DateOfBirth" class="form-control" type="date" />
                     <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Input.TypeDocument"></label>
+                    <label>Тип документа</label>
                     <input type="text" asp-for="Input.TypeDocument" class="form-control" />
                     <span asp-validation-for="Input.TypeDocument" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Input.DocumentNumber"></label>
+                    <label>Номер документа</label>
                     <input type="number" asp-for="Input.DocumentNumber" class="form-control" />
                     <span asp-validation-for="Input.DocumentNumber" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Input.Salary"></label>
+                    <label>Зарплата</label>
                     <input asp-for="Input.Salary" class="form-control" />
                     <span asp-validation-for="Input.Salary" class="text-danger"></span>
                 </div>
@@ -66,22 +66,22 @@
             @if (!Model.Input.IsIndividual)
             {
                 <div class="form-group">
-                    <label asp-for="Input.CompanyName"></label>
+                    <label>Название компании</label>
                     <input asp-for="Input.CompanyName" class="form-control" />
                     <span asp-validation-for="Input.CompanyName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Input.Unp"></label>
+                    <label>УНП</label>
                     <input asp-for="Input.Unp" class="form-control" />
                     <span asp-validation-for="Input.Unp" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Input.NumberDocument"></label>
+                    <label>Номер документа</label>
                     <input type="number" asp-for="Input.NumberDocument" class="form-control" />
                     <span asp-validation-for="Input.NumberDocument" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Input.CashTurnover"></label>
+                    <label>Денежный оборот</label>
                     <input asp-for="Input.CashTurnover" class="form-control" />
                     <span asp-validation-for="Input.CashTurnover" class="text-danger"></span>
                 </div>
