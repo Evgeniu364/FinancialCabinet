@@ -11,7 +11,7 @@ namespace FinancialCabinet.Service
         {
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("Администрация сайта", "EMAIL"));
+            emailMessage.From.Add(new MailboxAddress("Администрация сайта", "financial.cabinet@mail.ru"));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
@@ -21,8 +21,8 @@ namespace FinancialCabinet.Service
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.Auto);
-                await client.AuthenticateAsync("EMAIL", "PASSWORD");
+                await client.ConnectAsync("smtp.mail.ru", 465, SecureSocketOptions.Auto);
+                await client.AuthenticateAsync("financial.cabinet@mail.ru", "veidsystems");
                 await client.SendAsync(emailMessage);
 
                 await client.DisconnectAsync(true);
