@@ -94,14 +94,14 @@
         <button id="openSearch" style="width: 100%;" class="button-credit">
             Поиск
         </button>
-        <button id="compareDeposits" style="width: 100%; background-color:white; color:black; border:hidden" class="button-credit">
+        <button id="compareDeposits" style="width: 100%; margin-top: 3px;" class="button-credit">
             Сравнить вклады
         </button>
         <div style="display: inline;">
-            <button id="compareInput" style="width: 100%; display:none; background-color:red; color:white; border:hidden" class="btn-success" onclick="showSelected()">
+            <button id="compareInput" style="width: 100%; display:none; margin-top: 3px; background-color: #FFE4E4;" class="button-credit" onclick="showSelected()">
                 Сравнить
             </button>
-            <button id="cancelCompare" style="width: 100%; display:none; background-color:white; color:black; border:hidden" class="btn-danger" onclick="cancelCompare()">
+            <button id="cancelCompare" style="width: 100%; display:none; margin-top: 3px; background-color: white;" class="button-credit" onclick="cancelCompare()">
                 Отмена
             </button>
         </div>
@@ -135,41 +135,41 @@
                 @foreach (DepositModel deposit in Model)
                 {
                     i++;
-                    <tr class="table-row">
-                        <th rowspan="@deposit.SingleDepositList.Count" style="vertical-align: middle;">
-                            @i
-                        </th>
-                        <td rowspan="@deposit.SingleDepositList.Count" style="vertical-align: middle;">
-                            @deposit.DepositName
-                        </td>
-                        <td>
-                            @deposit.SingleDepositList.First().Currency
-                        </td>
-                        @if (deposit.SingleDepositList.First().Period.IsInterval)
-                        {
-                            string minPType = deposit.SingleDepositList.First().Period.MinPeriodType == 0 ? "дн." : "мес.";
-                            string maxPType = deposit.SingleDepositList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
-                            <td style="width: 10%">От @deposit.SingleDepositList.First().Period.MinPeriod.Value @minPType До @deposit.SingleDepositList.First().Period.MaxPeriod @maxPType</td>
-                        }
-                        else
-                        {
-                            string maxPType = deposit.SingleDepositList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
-                            <td style="width: 10%">До @deposit.SingleDepositList.First().Period.MaxPeriod @maxPType</td>
-                        }
-                        @if (deposit.SingleDepositList.First().Percent.MaxPercent == 0)
-                        {
-                            <td>-</td>
-                        }
-                        else
-                        {
-                            <td>@deposit.SingleDepositList.First().Percent.MaxPercent%</td>
-                        }
+                <tr class="table-row">
+                    <th rowspan="@deposit.SingleDepositList.Count" style="vertical-align: middle;">
+                        @i
+                    </th>
+                    <td rowspan="@deposit.SingleDepositList.Count" style="vertical-align: middle;">
+                        @deposit.DepositName
+                    </td>
+                    <td>
+                        @deposit.SingleDepositList.First().Currency
+                    </td>
+                    @if (deposit.SingleDepositList.First().Period.IsInterval)
+                    {
+                        string minPType = deposit.SingleDepositList.First().Period.MinPeriodType == 0 ? "дн." : "мес.";
+                        string maxPType = deposit.SingleDepositList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                        <td style="width: 10%">От @deposit.SingleDepositList.First().Period.MinPeriod.Value @minPType До @deposit.SingleDepositList.First().Period.MaxPeriod @maxPType</td>
+                    }
+                    else
+                    {
+                        string maxPType = deposit.SingleDepositList.First().Period.MaxPeriodType == 0 ? "дн." : "мес.";
+                        <td style="width: 10%">До @deposit.SingleDepositList.First().Period.MaxPeriod @maxPType</td>
+                    }
+                    @if (deposit.SingleDepositList.First().Percent.MaxPercent == 0)
+                    {
+                        <td>-</td>
+                    }
+                    else
+                    {
+                        <td>@deposit.SingleDepositList.First().Percent.MaxPercent%</td>
+                    }
 
-                        <td>
-                            <a href="/Deposite/Like?depositId=@deposit.SingleDepositList.First().ID">❤</a>
-                        </td>
-                        <td></td>
-                    </tr>
+                    <td>
+                        <a href="/Deposite/Like?depositId=@deposit.SingleDepositList.First().ID">❤</a>
+                    </td>
+                    <td id="checkboxCompare" style="display:none" name="@i"><input type="checkbox" /></td>
+                </tr>
                     @if (deposit.SingleDepositList.Count > 1)
                     {
                         int j = 0;
