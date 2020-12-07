@@ -9,6 +9,6 @@ namespace FinancialCabinet.Interface
     {
         public Guid UserID { get; set; }
 
-        public Guid CreditId { get; set; }
+        public Guid SingleCreditId { get; set; }
     }
 }

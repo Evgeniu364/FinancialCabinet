@@ -45,6 +45,8 @@ namespace FinancialCabinet
             services.AddTransient<DepositService>();
             services.AddTransient<CreditService>();
             services.AddTransient<RecomendationSystem>();
+            services.AddTransient<LikeCreditService>();
+            services.AddTransient<LikeDepositService>();
             
             services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddDefaultTokenProviders()

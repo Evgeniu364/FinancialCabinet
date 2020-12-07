@@ -43,6 +43,12 @@ namespace FinancialCabinet.MappingProfile
 
             CreateMap<Bank, BankModel>();
             CreateMap<BankModel, Bank>();
+
+            CreateMap<LikeCredit, LikeCreditModel>();
+            CreateMap<LikeCreditModel, LikeCredit>();
+
+            CreateMap<LikeDeposit, LikeDepositModel>();
+            CreateMap<LikeDepositModel, LikeDeposit>();
         }
     }
 }

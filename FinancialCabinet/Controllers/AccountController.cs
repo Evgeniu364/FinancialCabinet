@@ -168,6 +168,12 @@ namespace FinancialCabinet.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult EmailConfirmationSuccess() {
+            return View();
+        }
+
         #region Helpers
 
         private void AddErrors(IdentityResult result)

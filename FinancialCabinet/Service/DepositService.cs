@@ -14,13 +14,15 @@ namespace FinancialCabinet.Service
 {
     public class DepositService : ModelService<Deposit, DepositModel, ApplicationDbContext, IMapper>
     {
+        private readonly LikeDepositService likeDepositService;
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
 
-        public DepositService(ApplicationDbContext context, IMapper mapper) : base(context, mapper) 
+        public DepositService(ApplicationDbContext context, IMapper mapper, LikeDepositService likeDepositService) : base(context, mapper) 
         {
             this.context = context;
             this.mapper = mapper;
+            this.likeDepositService = likeDepositService;
         }
 
         public override async Task<List<DepositModel>> GetAllAsync()
@@ -42,6 +44,14 @@ namespace FinancialCabinet.Service
             int? periodTo = (int?)sortParams["periodTo"];
             double? maxPercent = (double?)sortParams["maxPercent"];
             bool? isForBusiness = (bool?)sortParams["isForBusiness"];
+            bool? isLikeDeposits = (bool?)sortParams["isLikeDeposits"];
+            Guid userId = (Guid)sortParams["userId"];
+
+            if (isLikeDeposits.HasValue)
+            {
+                modelList = mapper.Map<List<DepositModel>>((await likeDepositService.GetAllAsync()).Where(e => e.UserID == userId).Select(e => e.SingleDeposit.Deposit).ToList());
+                return modelList;
+            }
 
             if (isForBusiness.HasValue)
             {

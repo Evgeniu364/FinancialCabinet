@@ -1,13 +1,14 @@
-﻿using FinancialCabinet.Interface;
+﻿using FinancialCabinet.Entity;
+using FinancialCabinet.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinancialCabinet.Entity
+namespace FinancialCabinet.Models
 {
-    public class LikeCredit : ILikeCredit
+    public class LikeCreditModel : ILikeCredit
     {
         public Guid ID { get; set; }
         public Guid UserID { get; set; }

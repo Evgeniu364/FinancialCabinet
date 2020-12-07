@@ -13,11 +13,13 @@ namespace FinancialCabinet.Service
     public class CreditService : ModelService<Credit, CreditModel, ApplicationDbContext, IMapper>
     {
         private readonly ApplicationDbContext context;
+        private readonly LikeCreditService likeCreditService;
         private readonly IMapper mapper;
-        public CreditService(ApplicationDbContext context, IMapper mapper) : base(context, mapper)
+        public CreditService(ApplicationDbContext context, IMapper mapper, LikeCreditService likeCreditService) : base(context, mapper)
         {
             this.context = context;
             this.mapper = mapper;
+            this.likeCreditService = likeCreditService;
         }
 
         public override async Task<CreditModel> GetAsync(Guid ID)
@@ -45,15 +47,22 @@ namespace FinancialCabinet.Service
         public override async Task<List<CreditModel>> GetAllAsync(Dictionary<string, object> sortParams)
         {
             List<CreditModel> modelList = await GetAllAsync();
-            int? sortType = (int?) sortParams["sortingType"];
+            int? sortType = (int?)sortParams["sortingType"];
             string currencyParam = sortParams["currencyParam"]?.ToString() ?? null;
-            double? minAmount = (double?) sortParams["minAmount"];
-            double? maxAmount = (double?) sortParams["maxAmount"];
-            int? periodFrom = (int?) sortParams["periodFrom"];
-            int? periodTo = (int?) sortParams["periodTo"];
-            double? maxPercent = (double?) sortParams["maxPercent"];
-            bool? isForBusiness = (bool?) sortParams["isForBusiness"];
+            double? minAmount = (double?)sortParams["minAmount"];
+            double? maxAmount = (double?)sortParams["maxAmount"];
+            int? periodFrom = (int?)sortParams["periodFrom"];
+            int? periodTo = (int?)sortParams["periodTo"];
+            double? maxPercent = (double?)sortParams["maxPercent"];
+            bool? isForBusiness = (bool?)sortParams["isForBusiness"];
+            bool? isLikeCredits = (bool?)sortParams["isLikeCredits"];
+            Guid userId = (Guid)sortParams["userId"];
 
+            if (isLikeCredits.HasValue)
+            {
+                modelList = mapper.Map<List<CreditModel>>((await likeCreditService.GetAllAsync()).Where(e => e.UserID == userId).Select(e => e.SingleCredit.Credit).ToList());
+                return modelList;
+            }
             if (isForBusiness.HasValue)
             {
                 modelList = modelList.Where(model => model.IsForBusiness == isForBusiness).ToList();

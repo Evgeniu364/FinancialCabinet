@@ -16,6 +16,22 @@
     <Compile Remove="Migrations\20201117103824_AddCascadeDelete.Designer.cs" />
     <Compile Remove="Migrations\20201203184421_AddLikeCredit.cs" />
     <Compile Remove="Migrations\20201203184421_AddLikeCredit.Designer.cs" />
+    <Compile Remove="Migrations\20201207205020_changeLikeCreditIdName.cs" />
+    <Compile Remove="Migrations\20201207205020_changeLikeCreditIdName.Designer.cs" />
+    <Compile Remove="Migrations\20201207205241_changeLikeCreditIdName.cs" />
+    <Compile Remove="Migrations\20201207205241_changeLikeCreditIdName.Designer.cs" />
+    <Compile Remove="Migrations\20201207211739_changeLikeCreditIdName.cs" />
+    <Compile Remove="Migrations\20201207211739_changeLikeCreditIdName.Designer.cs" />
+    <Compile Remove="Migrations\20201207212632_changeLikeCreditIdName.cs" />
+    <Compile Remove="Migrations\20201207212632_changeLikeCreditIdName.Designer.cs" />
+    <Compile Remove="Migrations\20201207212859_addLikeCredit.cs" />
+    <Compile Remove="Migrations\20201207212859_addLikeCredit.Designer.cs" />
+    <Compile Remove="Migrations\20201207213145_addLikeCredit.cs" />
+    <Compile Remove="Migrations\20201207213145_addLikeCredit.Designer.cs" />
+    <Compile Remove="Migrations\20201207213908_removeLikeCredit.cs" />
+    <Compile Remove="Migrations\20201207213908_removeLikeCredit.Designer.cs" />
+    <Compile Remove="Migrations\20201207214251_addLikeCredits.cs" />
+    <Compile Remove="Migrations\20201207214251_addLikeCredits.Designer.cs" />
   </ItemGroup>
 
 

@@ -3,14 +3,16 @@ using System;
 using FinancialCabinet.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FinancialCabinet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201207214001_removeLikeCredit")]
+    partial class removeLikeCredit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,27 +204,6 @@ namespace FinancialCabinet.Migrations
                         .IsUnique();
 
                     b.ToTable("LegalEntity");
-                });
-
-            modelBuilder.Entity("FinancialCabinet.Entity.LikeCredit", b =>
-                {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("SingleCreditId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("UserID")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("SingleCreditId");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("LikeCredit");
                 });
 
             modelBuilder.Entity("FinancialCabinet.Entity.LikeDeposit", b =>
@@ -665,21 +646,6 @@ namespace FinancialCabinet.Migrations
                     b.HasOne("FinancialCabinet.Entity.User", "User")
                         .WithOne("LegalEntity")
                         .HasForeignKey("FinancialCabinet.Entity.LegalEntity", "UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("FinancialCabinet.Entity.LikeCredit", b =>
-                {
-                    b.HasOne("FinancialCabinet.Entity.SingleCredit", "SingleCredit")
-                        .WithMany("LikeCreditList")
-                        .HasForeignKey("SingleCreditId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FinancialCabinet.Entity.User", "User")
-                        .WithMany("LikeCreditList")
-                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

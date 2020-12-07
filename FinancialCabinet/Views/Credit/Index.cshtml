@@ -31,6 +31,9 @@
                         <div class="filter-text">
                             Мои рекомендации:
                         </div>
+                        <div class="filter-text">
+                            Понравившиеся:
+                        </div>
                     </div>
                     <div>
                         <div>
@@ -89,6 +92,9 @@
                         <div>
                             <input type="checkbox" name="isRecomendation" value="true" class="filter-input" />
                         </div>
+                        <div>
+                            <input type="checkbox" name="isLikeCredits" value="true" class="filter-input" />
+                        </div>
                     </div>
                 </div>
                 <input type="submit" value="Применить" class="filter-input button-credit" />
@@ -99,14 +105,14 @@
         <button id="openSearch" style="width: 100%;" class="button-credit">
             Поиск
         </button>
-        <button id="compareDeposits" style="width: 100%; background-color:white; color:black; border:hidden" class="button-credit">
-            Сравнить вклады
+        <button id="compareDeposits" style="width: 100%; margin-top: 3px;" class="button-credit">
+            Сравнить кредиты
         </button>
         <div style="display: inline;">
-            <button id="compareInput" style="width: 100%; display:none; background-color:red; border:hidden" class="btn-success" onclick="showSelected()">
+            <button id="compareInput" style="width: 100%; display:none; margin-top: 3px; background-color: #DEF3E6;" class="button-credit" onclick="showSelected()">
                 Сравнить
             </button>
-            <button id="cancelCompare" style="width: 100%; display:none; background-color:white; color:black; border:hidden" class="btn-danger" onclick="cancelCompare()">
+            <button id="cancelCompare" style="width: 100%; display:none; margin-top: 3px; background-color: #FFE4E4;" class="button-credit" onclick="cancelCompare()">
                 Отмена
             </button>
         </div>
@@ -135,6 +141,9 @@
                     </th>
                     <th class="th-header">
                         Ставка
+                    </th>
+                    <th class="th-header">
+                        Лайк
                     </th>
                 </tr>
             </thead>
@@ -196,6 +205,9 @@
                         {
                             <td>@credit.SingleCreditList.First().Percent.MaxPercent%</td>
                         }
+                        <td>
+                            <a href="/Credit/Like?creditId=@credit.SingleCreditList.First().ID">❤</a>
+                        </td>
                         <td id="checkboxCompare" style="display:none" name="@i"><input type="checkbox" /></td>
                     </tr>
                     @if (credit.SingleCreditList.Count > 1)
@@ -234,6 +246,7 @@
                                 {
                                     <td>@singleCredit.Percent.MaxPercent%</td>
                                 }
+                                <td></td>
                                 <td id="checkboxCompare" style="display:none" name="@i-@j"><input type="checkbox" /></td>
                             </tr>
                         }
